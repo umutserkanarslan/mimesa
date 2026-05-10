@@ -1,11 +1,16 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import vercel from '@astrojs/vercel';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   site: 'https://mimesa.com',
-  output: 'static',
+  output: 'server',
+  adapter: vercel({
+    imageService: true,
+    webAnalytics: { enabled: false },
+  }),
   i18n: {
     defaultLocale: 'tr',
     locales: ['tr', 'en', 'ar'],

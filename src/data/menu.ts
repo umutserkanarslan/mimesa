@@ -1,6 +1,35 @@
-import type { MenuData } from '@/lib/menu';
+// Seed source for the Supabase migration script (scripts/seed.ts).
+// At runtime the public site reads from Supabase, not this file.
 
-export const menuData: MenuData = {
+type Tx = { tr: string; en: string; ar: string };
+
+interface SeedCategory {
+  slug: string;
+  order: number;
+  name: Tx;
+  tagline: Tx;
+  description: Tx;
+  cover: string;
+}
+
+interface SeedItem {
+  id: string;
+  slug: string;
+  category: string;
+  name: Tx;
+  description: Tx;
+  price: number;
+  currency: 'TRY';
+  image: string;
+  flags?: string[];
+}
+
+interface SeedData {
+  categories: SeedCategory[];
+  items: SeedItem[];
+}
+
+export const menuData: SeedData = {
   categories: [
     {
       slug: 'salatalar',

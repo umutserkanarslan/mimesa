@@ -28,6 +28,11 @@ const description = localized(category.description, lang);
 
 const pageTitle = dict.menuPage.index.categoryMetaTitle.replace('{name}', name);
 const categoriesHref = localizedPath(lang, '/menu/kategoriler');
+
+Astro.response.headers.set(
+  'Cache-Control',
+  'public, max-age=0, s-maxage=30, stale-while-revalidate=300'
+);
 ---
 
 <BaseLayout lang={lang} title={pageTitle} description={description} ogAlt={m.ogAlt}>

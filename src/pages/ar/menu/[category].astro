@@ -1,12 +1,6 @@
 ---
 import CategoryPage from '@/components/menu/CategoryPage.astro';
 import type { Locale } from '@/lib/i18n';
-import { getCategories } from '@/lib/menu';
-
-export async function getStaticPaths() {
-  const cats = await getCategories();
-  return cats.map((c) => ({ params: { category: c.slug } }));
-}
 
 const lang: Locale = 'ar';
 const { category } = Astro.params;

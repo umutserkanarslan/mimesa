@@ -16,6 +16,12 @@ const c = dict.menuPage.category;
 const categories = await getCategories();
 const allItems = await getAllItems();
 const splashHref = localizedPath(lang, '/menu');
+
+// CDN cache: 30s fresh, then serve stale while refreshing in the background
+Astro.response.headers.set(
+  'Cache-Control',
+  'public, max-age=0, s-maxage=30, stale-while-revalidate=300'
+);
 ---
 
 <BaseLayout lang={lang} title={m.title} description={m.description} ogAlt={m.ogAlt}>

@@ -28,9 +28,6 @@ export interface MenuCategory {
   order: number;
 }
 
-let categoriesCache: MenuCategory[] | null = null;
-let itemsCache: MenuItem[] | null = null;
-
 const FALLBACK_IMAGE =
   'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=900&q=72';
 
@@ -62,23 +59,25 @@ function toItem(row: DbItem): MenuItem {
 }
 
 export async function getCategories(): Promise<MenuCategory[]> {
-  if (categoriesCache) return categoriesCache;
   const { data, error } = await supabase
     .from('categories')
     .select('*')
     .order('sort_order', { ascending: true });
   if (error) throw error;
-  categoriesCache = (data ?? []).map(toCategory);
-  return categoriesCache;
+  return (data ?? []).map(toCategory);
 }
 
 export async function getCategoryBySlug(slug: string): Promise<MenuCategory | undefined> {
-  const all = await getCategories();
-  return all.find((c) => c.slug === slug);
+  const { data, error } = await supabase
+    .from('categories')
+    .select('*')
+    .eq('slug', slug)
+    .maybeSingle();
+  if (error) throw error;
+  return data ? toCategory(data) : undefined;
 }
 
 export async function getAllItems(): Promise<MenuItem[]> {
-  if (itemsCache) return itemsCache;
   const { data, error } = await supabase
     .from('items')
     .select('*')
@@ -86,13 +85,19 @@ export async function getAllItems(): Promise<MenuItem[]> {
     .order('sort_order', { ascending: true })
     .order('created_at', { ascending: true });
   if (error) throw error;
-  itemsCache = (data ?? []).map(toItem);
-  return itemsCache;
+  return (data ?? []).map(toItem);
 }
 
 export async function getItemsByCategory(slug: string): Promise<MenuItem[]> {
-  const all = await getAllItems();
-  return all.filter((i) => i.category === slug);
+  const { data, error } = await supabase
+    .from('items')
+    .select('*')
+    .eq('category_slug', slug)
+    .eq('is_published', true)
+    .order('sort_order', { ascending: true })
+    .order('created_at', { ascending: true });
+  if (error) throw error;
+  return (data ?? []).map(toItem);
 }
 
 export function localized<T extends Translated>(value: T, lang: Locale): string {
