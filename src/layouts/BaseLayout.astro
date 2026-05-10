@@ -1,0 +1,99 @@
+---
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import { type Locale, getDir, localeHtml, locales, localizedPath } from '@/lib/i18n';
+import { restaurantSchema } from '@/lib/schema';
+
+interface Props {
+  lang: Locale;
+  title: string;
+  description: string;
+  ogAlt: string;
+}
+
+const { lang, title, description, ogAlt } = Astro.props;
+const dir = getDir(lang);
+const htmlLang = localeHtml[lang];
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL('/og-image.jpg', Astro.site);
+const schema = restaurantSchema(lang);
+const currentPath = '/';
+---
+
+<!doctype html>
+<html lang={htmlLang} dir={dir}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#F7E7CE" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonicalURL} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    {locales.map((l) => (
+      <link rel="alternate" hreflang={localeHtml[l]} href={new URL(localizedPath(l, currentPath), Astro.site)} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site)} />
+
+    <meta property="og:type" content="restaurant.restaurant" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content={ogAlt} />
+    <meta property="og:locale" content={htmlLang.replace('-', '_')} />
+    <meta property="og:site_name" content="Mi Mesa" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+    <ClientRouter />
+  </head>
+  <body>
+    <slot />
+
+    <script>
+      // IntersectionObserver-based reveal — tek pass, hafif.
+      const init = () => {
+        const els = document.querySelectorAll<HTMLElement>('.reveal');
+        if (!('IntersectionObserver' in window)) {
+          els.forEach((el) => el.classList.add('is-visible'));
+          return;
+        }
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                (entry.target as HTMLElement).classList.add('is-visible');
+                io.unobserve(entry.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -10% 0px', threshold: 0.08 }
+        );
+        els.forEach((el) => io.observe(el));
+      };
+
+      const initNav = () => {
+        const nav = document.querySelector<HTMLElement>('[data-nav-shell]');
+        if (!nav) return;
+        const onScroll = () => {
+          if (window.scrollY > 60) nav.classList.add('is-scrolled');
+          else nav.classList.remove('is-scrolled');
+        };
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+      };
+
+      const boot = () => { init(); initNav(); };
+      document.addEventListener('astro:page-load', boot);
+    </script>
+  </body>
+</html>

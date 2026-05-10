@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "title": "Mi Mesa — My table, my feast",
+    "description": "A modern reading of Mesopotamian village cuisine. At Mi Mesa, story, heritage, and the table become one.",
+    "ogAlt": "Mi Mesa fine dining restaurant"
+  },
+  "nav": {
+    "manifesto": "Manifesto",
+    "heritage": "Heritage",
+    "menu": "Menu",
+    "chef": "Chef",
+    "reservation": "Reservation",
+    "contact": "Contact",
+    "open": "Open menu",
+    "close": "Close menu"
+  },
+  "hero": {
+    "eyebrow": "MI MESA",
+    "tagline": "My table,",
+    "tagline2": "my feast.",
+    "subtitle": "A heritage carried from the dusty roads of Mesopotamia, from quiet evenings around the fire, to your senses.",
+    "cta": "Reserve",
+    "scroll": "Discover"
+  },
+  "manifesto": {
+    "eyebrow": "Manifesto",
+    "title": "The memory of a feast,",
+    "titleEm": "the promise of a table.",
+    "body": "Mi Mesa carries the smell of bread baked in old village courtyards, the warmth of the copper pot in a grandmother's hand, and the quiet gratitude at a grandfather's table — all into the present. Every plate tells a story; every story carries a heritage.",
+    "body2": "We see dining not as performance, but as invitation, as sharing, as meeting. When we say \"my table, my feast\", we welcome you not as a guest but as part of a shared memory."
+  },
+  "heritage": {
+    "eyebrow": "Heritage & Land",
+    "title": "The memory of the soil,",
+    "titleEm": "the loyalty of the plate.",
+    "body": "Our grains come from small producers, our greens follow the season's true calendar, our meats from traditional growers in the mountain villages. Every ingredient has a name, an address, a story.",
+    "captions": {
+      "one": "Village oven / hours of silence",
+      "two": "Copper pot / from one generation to the next",
+      "three": "Seasonal herbs / morning harvest",
+      "four": "Family table / a shared evening"
+    }
+  },
+  "menu": {
+    "eyebrow": "Digital Menu",
+    "title": "Open the evening,",
+    "titleEm": "with your hand.",
+    "body": "Browse our digital menu — it changes with the season, the harvest, and the chef's inspiration on the night.",
+    "cta": "Browse the digital menu"
+  },
+  "chef": {
+    "eyebrow": "Chef",
+    "title": "The quiet",
+    "titleEm": "language of fire.",
+    "name": "Chef Aram Demir",
+    "quote": "\"I do not cook recipes; I cook memory. Every plate is the rememberance of a village, a season, an evening.\"",
+    "body": "Aram Demir grew up in the narrow alleys of Mardin, matured in the most exacting kitchens of Europe, and finally returned to our own table. Mi Mesa is a letter he writes to his grandmother's pots."
+  },
+  "reservation": {
+    "eyebrow": "Reservation",
+    "title": "Your table",
+    "titleEm": "is waiting.",
+    "body": "Our kitchen is open 24/7. Please share your preferred time and any notes; we will get back to you.",
+    "form": {
+      "name": "Your name",
+      "email": "Email",
+      "phone": "Phone",
+      "date": "Date",
+      "time": "Time",
+      "guests": "Guests",
+      "note": "Note",
+      "notePlaceholder": "Allergies, celebration, sensitivities…",
+      "submit": "Prepare our table",
+      "thanks": "Thank you — we will be in touch shortly."
+    }
+  },
+  "contact": {
+    "eyebrow": "Contact",
+    "address": "Mi Mesa Restaurant",
+    "addressLines": ["Meşelik Dist., Muğla–Bodrum Road", "48670 Milas / Muğla"],
+    "phoneTitle": "Phone",
+    "phone": "+90 530 821 96 85",
+    "phoneIntl": "+905308219685",
+    "hoursTitle": "Service hours",
+    "hours": ["Open 24/7"],
+    "social": "Follow us"
+  },
+  "footer": {
+    "tagline": "My table, my feast.",
+    "rights": "All rights reserved."
+  }
+}

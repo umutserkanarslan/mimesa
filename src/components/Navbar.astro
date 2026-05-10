@@ -1,0 +1,124 @@
+---
+import { type Locale, getDict } from '@/lib/i18n';
+import LangSwitcher from './LangSwitcher.astro';
+
+interface Props {
+  lang: Locale;
+}
+const { lang } = Astro.props;
+const t = getDict(lang).nav;
+
+const links = [
+  { href: '#manifesto', label: t.manifesto },
+  { href: '#heritage', label: t.heritage },
+  { href: '#menu', label: t.menu },
+  { href: '#chef', label: t.chef },
+  { href: '#contact', label: t.contact },
+];
+---
+
+<header
+  data-nav-shell
+  class="nav-shell fixed top-0 inset-x-0 z-50"
+>
+  <div class="container-luxe flex items-center justify-between h-[72px] md:h-[84px]">
+    <a href="/" class="group inline-flex items-baseline gap-2" aria-label="Mi Mesa">
+      <span class="text-[1.55rem] md:text-[1.75rem]" style="font-family:var(--font-display);font-style:italic;font-weight:500;line-height:1;color:var(--nav-fg);transition:color .5s ease;">Mi&nbsp;Mesa</span>
+      <span class="hidden md:inline-block w-6 h-px bg-[var(--color-copper)] opacity-70 transition-all duration-500 group-hover:w-12"></span>
+    </a>
+
+    <nav aria-label="Primary" class="hidden lg:flex items-center gap-9">
+      {links.map((l) => (
+        <a
+          href={l.href}
+          class="text-[0.74rem] uppercase hover:text-[var(--color-copper)] transition-colors duration-300"
+          style="letter-spacing:var(--tracking-wider-luxe);font-weight:400;color:var(--nav-fg-soft);"
+        >{l.label}</a>
+      ))}
+    </nav>
+
+    <div class="flex items-center gap-5 md:gap-7">
+      <LangSwitcher current={lang} />
+      <a
+        href="#reservation"
+        class="hidden md:inline-flex btn-copper"
+      >{t.reservation}</a>
+      <button
+        type="button"
+        data-mobile-toggle
+        aria-label={t.open}
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+        class="lg:hidden inline-flex flex-col gap-[5px] p-2 -me-2"
+      >
+        <span class="w-6 h-px" style="background:var(--nav-fg);transition:background .5s ease;"></span>
+        <span class="w-6 h-px" style="background:var(--nav-fg);transition:background .5s ease;"></span>
+        <span class="w-4 h-px ms-auto" style="background:var(--nav-fg);transition:background .5s ease;"></span>
+      </button>
+    </div>
+  </div>
+
+  <span class="hairline absolute inset-x-0 bottom-0 opacity-0 transition-opacity duration-500 [.is-scrolled_&]:opacity-100"></span>
+</header>
+
+<!-- Mobile drawer -->
+<div
+  id="mobile-menu"
+  data-mobile-menu
+  hidden
+  class="fixed inset-0 z-[60] bg-[var(--color-charcoal)] text-[var(--color-champagne)] grain-bg"
+>
+  <div class="container-luxe h-full flex flex-col">
+    <div class="flex items-center justify-between h-[72px] md:h-[84px]">
+      <span class="text-[1.55rem]" style="font-family:var(--font-display);font-style:italic;font-weight:500;color:var(--color-champagne);">Mi&nbsp;Mesa</span>
+      <button
+        type="button"
+        data-mobile-close
+        aria-label={t.close}
+        class="p-2 -me-2"
+      >
+        <span class="block w-6 h-px bg-[var(--color-champagne)] rotate-45 translate-y-[1px]"></span>
+        <span class="block w-6 h-px bg-[var(--color-champagne)] -rotate-45 -translate-y-0"></span>
+      </button>
+    </div>
+    <nav aria-label="Mobile" class="mt-12 flex flex-col gap-7">
+      {links.map((l) => (
+        <a
+          href={l.href}
+          data-mobile-link
+          class="text-[2.4rem] sm:text-[3rem] leading-[1.05] hover:text-[var(--color-copper)] transition-colors duration-300"
+          style="font-family:var(--font-display);font-weight:400;"
+        >{l.label}</a>
+      ))}
+    </nav>
+    <div class="mt-auto pb-10 flex items-center justify-between">
+      <LangSwitcher current={lang} tone="light" />
+      <a href="#reservation" data-mobile-link class="btn-copper btn-copper--light">{t.reservation}</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  const wire = () => {
+    const toggle = document.querySelector<HTMLButtonElement>('[data-mobile-toggle]');
+    const menu = document.querySelector<HTMLElement>('[data-mobile-menu]');
+    const close = document.querySelector<HTMLButtonElement>('[data-mobile-close]');
+    const links = document.querySelectorAll<HTMLAnchorElement>('[data-mobile-link]');
+    if (!toggle || !menu || !close) return;
+
+    const open = () => {
+      menu.hidden = false;
+      toggle.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    };
+    const hide = () => {
+      menu.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    };
+    toggle.addEventListener('click', open);
+    close.addEventListener('click', hide);
+    links.forEach((a) => a.addEventListener('click', hide));
+  };
+  document.addEventListener('astro:page-load', wire);
+</script>

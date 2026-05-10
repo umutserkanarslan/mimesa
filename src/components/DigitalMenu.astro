@@ -1,0 +1,54 @@
+---
+import { type Locale, getDict } from '@/lib/i18n';
+import FadeIn from './FadeIn.astro';
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = getDict(lang).menu;
+---
+
+<section id="menu" class="relative bg-[var(--color-champagne)] py-28 md:py-44 overflow-hidden grain-bg">
+  <div class="container-luxe relative z-10">
+    <FadeIn>
+      <article class="relative mx-auto max-w-5xl bg-[var(--color-offwhite)] px-6 py-14 sm:px-12 sm:py-20 md:px-20 md:py-28 text-center">
+        <!-- Mesopotamian-inspired corner motifs (SVG) -->
+        <svg aria-hidden="true" class="absolute top-3 start-3 w-10 h-10 md:w-14 md:h-14 text-[var(--color-copper)]/70" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1">
+          <path d="M2 22 V2 H22"/>
+          <path d="M10 14 H14 V10"/>
+          <circle cx="22" cy="22" r="2"/>
+          <path d="M2 32 H18"/>
+        </svg>
+        <svg aria-hidden="true" class="absolute top-3 end-3 w-10 h-10 md:w-14 md:h-14 text-[var(--color-copper)]/70 -scale-x-100" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1">
+          <path d="M2 22 V2 H22"/>
+          <path d="M10 14 H14 V10"/>
+          <circle cx="22" cy="22" r="2"/>
+          <path d="M2 32 H18"/>
+        </svg>
+        <svg aria-hidden="true" class="absolute bottom-3 start-3 w-10 h-10 md:w-14 md:h-14 text-[var(--color-copper)]/70 -scale-y-100" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1">
+          <path d="M2 22 V2 H22"/>
+          <path d="M10 14 H14 V10"/>
+          <circle cx="22" cy="22" r="2"/>
+          <path d="M2 32 H18"/>
+        </svg>
+        <svg aria-hidden="true" class="absolute bottom-3 end-3 w-10 h-10 md:w-14 md:h-14 text-[var(--color-copper)]/70 -scale-100" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1">
+          <path d="M2 22 V2 H22"/>
+          <path d="M10 14 H14 V10"/>
+          <circle cx="22" cy="22" r="2"/>
+          <path d="M2 32 H18"/>
+        </svg>
+
+        <!-- Hairline frame -->
+        <span class="absolute inset-x-12 top-8 h-px bg-[var(--color-copper)]/50"></span>
+        <span class="absolute inset-x-12 bottom-8 h-px bg-[var(--color-copper)]/50"></span>
+
+        <span class="eyebrow">{t.eyebrow}</span>
+        <h2 class="mt-6" style="font-family:var(--font-display);font-size:clamp(2.2rem,5.5vw,4.4rem);line-height:1.05;font-weight:400;">
+          <span class="block">{t.title}</span>
+          <span class="block italic" style="color:var(--color-copper);">{t.titleEm}</span>
+        </h2>
+        <p class="mt-7 mx-auto max-w-xl text-[1rem] leading-[1.8] text-[var(--color-ink)]/75">{t.body}</p>
+
+        <a href="#menu" class="mt-10 inline-flex btn-copper">{t.cta}</a>
+      </article>
+    </FadeIn>
+  </div>
+</section>

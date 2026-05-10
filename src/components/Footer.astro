@@ -1,0 +1,71 @@
+---
+import { type Locale, getDict } from '@/lib/i18n';
+import LangSwitcher from './LangSwitcher.astro';
+import FadeIn from './FadeIn.astro';
+
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const c = getDict(lang).contact;
+const f = getDict(lang).footer;
+const year = new Date().getFullYear();
+---
+
+<footer id="contact" class="relative bg-[var(--color-charcoal)] text-[var(--color-champagne)] grain-bg">
+  <!-- Map -->
+  <div class="relative h-[320px] md:h-[420px] w-full overflow-hidden border-b border-[var(--color-copper)]/25">
+    <iframe
+      title="Mi Mesa map"
+      src="https://www.openstreetmap.org/export/embed.html?bbox=27.7482%2C37.2485%2C27.7882%2C37.2885&layer=mapnik&marker=37.268537%2C27.768183"
+      class="absolute inset-0 w-full h-full grayscale-[0.6] contrast-[0.85] opacity-80"
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+    ></iframe>
+    <div class="absolute inset-0 bg-[var(--color-charcoal)]/30 pointer-events-none"></div>
+  </div>
+
+  <div class="container-luxe relative z-10 py-20 md:py-28">
+    <div class="grid grid-cols-12 gap-x-6 gap-y-12">
+
+      <FadeIn class="col-span-12 md:col-span-5">
+        <span class="block text-[2.4rem] md:text-[3.2rem]" style="font-family:var(--font-display);font-style:italic;font-weight:400;line-height:1;">Mi&nbsp;Mesa</span>
+        <p class="mt-6 italic max-w-sm text-[var(--color-champagne)]/70" style="font-family:var(--font-display);font-size:1.05rem;line-height:1.6;">{f.tagline}</p>
+        <span class="hairline w-16 mt-8"></span>
+      </FadeIn>
+
+      <FadeIn class="col-span-6 md:col-span-3" delay={120}>
+        <span class="eyebrow !text-[var(--color-copper-soft)]">{c.eyebrow}</span>
+        <div class="mt-5 flex flex-col gap-1.5 text-[0.95rem] text-[var(--color-champagne)]/80">
+          <span style="font-family:var(--font-display);font-style:italic;">{c.address}</span>
+          {c.addressLines.map((l) => <span>{l}</span>)}
+          <a
+            href={`tel:${c.phoneIntl}`}
+            class="mt-3 hover:text-[var(--color-copper)] transition-colors"
+            style="font-variant-numeric:tabular-nums;"
+            dir="ltr"
+          >{c.phone}</a>
+        </div>
+      </FadeIn>
+
+      <FadeIn class="col-span-6 md:col-span-2" delay={240}>
+        <span class="eyebrow !text-[var(--color-copper-soft)]">{c.hoursTitle}</span>
+        <div class="mt-5 flex flex-col gap-1.5 text-[0.92rem] text-[var(--color-champagne)]/80">
+          {c.hours.map((h) => <span>{h}</span>)}
+        </div>
+      </FadeIn>
+
+      <FadeIn class="col-span-12 md:col-span-2" delay={360}>
+        <span class="eyebrow !text-[var(--color-copper-soft)]">{c.social}</span>
+        <ul class="mt-5 flex flex-col gap-2.5 text-[0.95rem]">
+          <li><a href="https://instagram.com" class="hover:text-[var(--color-copper)] transition-colors">Instagram</a></li>
+          <li><a href={`https://wa.me/${c.phoneIntl.replace('+','')}`} class="hover:text-[var(--color-copper)] transition-colors">WhatsApp</a></li>
+          <li><a href="mailto:hello@mimesa.com" class="hover:text-[var(--color-copper)] transition-colors">hello@mimesa.com</a></li>
+        </ul>
+      </FadeIn>
+    </div>
+
+    <div class="mt-20 pt-7 border-t border-[var(--color-copper)]/25 flex flex-col-reverse md:flex-row md:items-center md:justify-between gap-5">
+      <span class="text-[0.78rem] text-[var(--color-champagne)]/60" style="letter-spacing:var(--tracking-wide-luxe);">© {year} Mi Mesa · {f.rights}</span>
+      <LangSwitcher current={lang} tone="light" />
+    </div>
+  </div>
+</footer>

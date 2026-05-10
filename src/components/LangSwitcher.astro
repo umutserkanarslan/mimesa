@@ -1,0 +1,29 @@
+---
+import { locales, localeLabels, localizedPath, type Locale } from '@/lib/i18n';
+
+interface Props {
+  current: Locale;
+  tone?: 'dark' | 'light';
+}
+
+const { current, tone = 'dark' } = Astro.props;
+const colorBase = tone === 'light' ? 'text-[var(--color-champagne)]/70' : 'text-[color:var(--nav-fg-soft)]';
+const colorActive = tone === 'light' ? 'text-[var(--color-champagne)]' : 'text-[color:var(--nav-fg)]';
+---
+
+<nav aria-label="Language" class="flex items-center gap-3 text-[0.7rem]" style="letter-spacing:var(--tracking-wider-luxe);">
+  {locales.map((l, i) => (
+    <>
+      <a
+        href={localizedPath(l, '/')}
+        class:list={[
+          'transition-colors duration-300 hover:text-[var(--color-copper)]',
+          l === current ? colorActive : colorBase,
+        ]}
+        aria-current={l === current ? 'true' : undefined}
+        lang={l}
+      >{localeLabels[l]}</a>
+      {i < locales.length - 1 && <span class:list={[colorBase]} aria-hidden="true">·</span>}
+    </>
+  ))}
+</nav>

@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "title": "Mi Mesa — Benim masam, benim sofram",
+    "description": "Mezopotamya köy mutfağının modern yorumu. Mi Mesa'da hikaye, miras ve sofra bir araya gelir.",
+    "ogAlt": "Mi Mesa fine dining restoran"
+  },
+  "nav": {
+    "manifesto": "Manifesto",
+    "heritage": "Miras",
+    "menu": "Menü",
+    "chef": "Şef",
+    "reservation": "Rezervasyon",
+    "contact": "İletişim",
+    "open": "Menüyü aç",
+    "close": "Menüyü kapat"
+  },
+  "hero": {
+    "eyebrow": "MI MESA",
+    "tagline": "Benim masam,",
+    "tagline2": "benim sofram.",
+    "subtitle": "Mezopotamya'nın tozlu yollarından, ateşin etrafındaki sessiz akşamlardan damağınıza taşınan bir miras.",
+    "cta": "Rezervasyon",
+    "scroll": "Keşfet"
+  },
+  "manifesto": {
+    "eyebrow": "Manifesto",
+    "title": "Bir sofranın hatırası,",
+    "titleEm": "bir masanın vaadi.",
+    "body": "Mi Mesa, eski köylerin avlularında pişen ekmeğin kokusunu, anneannelerin elindeki bakır kabın ısısını, dedelerin masasındaki sessiz şükranı bugüne taşıyor. Her tabakta bir hikâye, her hikâyede bir miras var.",
+    "body2": "Biz yemeği bir gösteri değil; bir davet, bir paylaşım, bir tanışma olarak görüyoruz. \"Benim masam, benim sofram\" derken; sizi konuk değil, ortak bir hafızanın parçası kabul ediyoruz."
+  },
+  "heritage": {
+    "eyebrow": "Miras & Toprak",
+    "title": "Toprağın hafızası,",
+    "titleEm": "tabağın sadakati.",
+    "body": "Tahıllarımız küçük üreticilerin elinden, yeşilliklerimiz mevsimin gerçek takviminden, etlerimiz dağ köylerinin geleneksel yetiştiricilerinden geliyor. Her malzemenin bir adı, bir adresi, bir hikayesi var.",
+    "captions": {
+      "one": "Köy fırını / saatler süren sessizlik",
+      "two": "Bakır tencere / bir kuşaktan ötekine",
+      "three": "Mevsim otları / sabah hasadı",
+      "four": "Aile sofrası / paylaşılmış bir akşam"
+    }
+  },
+  "menu": {
+    "eyebrow": "Dijital Menü",
+    "title": "Akşamı,",
+    "titleEm": "elinizden açın.",
+    "body": "Mevsime, hasada ve şefin o akşamki ilhamına göre yenilenen menümüzü dijital olarak inceleyin.",
+    "cta": "Dijital menüye göz atın"
+  },
+  "chef": {
+    "eyebrow": "Şef",
+    "title": "Ateşin",
+    "titleEm": "sessiz dili.",
+    "name": "Şef Aram Demir",
+    "quote": "\"Tarif değil, hatıra pişiriyorum. Her tabak; bir köyün, bir mevsimin, bir akşamın yeniden hatırlanmasıdır.\"",
+    "body": "Aram Demir; Mardin'in dar sokaklarında büyüdü, Avrupa'nın en titiz mutfaklarında olgunlaştı ve sonunda kendi soframıza döndü. Mi Mesa, onun anneannesinin tencerelerine yazdığı bir mektup."
+  },
+  "reservation": {
+    "eyebrow": "Rezervasyon",
+    "title": "Masanız",
+    "titleEm": "sizi bekliyor.",
+    "body": "Mutfağımız 7 gün 24 saat hizmetinizde. Lütfen tercih ettiğiniz zamanı ve özel notlarınızı paylaşın; biz size dönelim.",
+    "form": {
+      "name": "Adınız",
+      "email": "E-posta",
+      "phone": "Telefon",
+      "date": "Tarih",
+      "time": "Saat",
+      "guests": "Kişi sayısı",
+      "note": "Özel not",
+      "notePlaceholder": "Alerji, özel kutlama, hassasiyet…",
+      "submit": "Masamızı hazırlayın",
+      "thanks": "Teşekkürler — en kısa sürede size dönüyoruz."
+    }
+  },
+  "contact": {
+    "eyebrow": "İletişim",
+    "address": "Mi Mesa Restoran",
+    "addressLines": ["Meşelik Mah., Muğla–Bodrum Yolu", "48670 Milas / Muğla"],
+    "phoneTitle": "Telefon",
+    "phone": "0530 821 96 85",
+    "phoneIntl": "+905308219685",
+    "hoursTitle": "Servis saatleri",
+    "hours": ["7 gün 24 saat açık"],
+    "social": "Bizi takip edin"
+  },
+  "footer": {
+    "tagline": "Benim masam, benim sofram.",
+    "rights": "Tüm hakları saklıdır."
+  }
+}

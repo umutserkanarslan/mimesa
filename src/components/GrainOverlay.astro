@@ -1,0 +1,11 @@
+---
+interface Props {
+  opacity?: number;
+}
+const { opacity = 0.05 } = Astro.props;
+---
+<div
+  class="pointer-events-none absolute inset-0 z-[1]"
+  style={`background-image:url('/grain.svg');background-size:240px 240px;opacity:${opacity};mix-blend-mode:multiply;`}
+  aria-hidden="true"
+></div>

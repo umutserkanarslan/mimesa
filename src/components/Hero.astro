@@ -1,0 +1,91 @@
+---
+import { Image } from 'astro:assets';
+import { type Locale, getDict } from '@/lib/i18n';
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = getDict(lang).hero;
+
+const heroSrc = 'https://images.unsplash.com/photo-1559329007-40df8a9345d8?auto=format&fit=crop&w=2000&q=80';
+
+// Letter-by-letter stagger for the tagline
+const animateLetters = (str: string, base = 0) =>
+  Array.from(str).map((ch, i) => ({
+    ch: ch === ' ' ? ' ' : ch,
+    delay: base + i * 32,
+  }));
+const line1 = animateLetters(t.tagline, 600);
+const line2 = animateLetters(t.tagline2, 600 + t.tagline.length * 32 + 120);
+---
+
+<section class="relative w-full min-h-[100svh] overflow-hidden bg-[var(--color-charcoal)] text-[var(--color-champagne)] grain-bg" aria-label="Mi Mesa">
+  <!-- Background image -->
+  <div class="absolute inset-0">
+    <Image
+      src={heroSrc}
+      alt=""
+      width={2400}
+      height={1600}
+      loading="eager"
+      decoding="async"
+      class="w-full h-full object-cover scale-105 will-change-transform"
+      transition:name="hero-image"
+    />
+    <!-- Layered atmospheric overlays -->
+    <div class="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/80"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_75%,rgba(184,115,51,0.18),transparent_55%)]"></div>
+  </div>
+
+  <!-- Top vignette to blend with navbar -->
+  <div class="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black/50 to-transparent z-10 pointer-events-none"></div>
+
+  <!-- Decorative copper hairlines -->
+  <div class="absolute top-[24%] start-8 md:start-16 w-px h-[18%] bg-[var(--color-copper)]/40 z-10"></div>
+  <div class="absolute bottom-[18%] end-8 md:end-16 w-px h-[14%] bg-[var(--color-copper)]/40 z-10"></div>
+
+  <!-- Content -->
+  <div class="relative z-20 container-luxe min-h-[100svh] flex flex-col">
+    <div class="flex-1 flex flex-col justify-center pt-32 pb-24 md:pt-36 md:pb-32 max-w-5xl">
+      <span
+        class="hero-letter eyebrow !text-[var(--color-copper-soft)]"
+        style="animation-delay:200ms;"
+      >{t.eyebrow}</span>
+
+      <h1 class="mt-7 md:mt-9 text-[var(--color-champagne)]" style="font-family:var(--font-display);font-weight:400;font-size:clamp(3rem, 10vw, 8.5rem);letter-spacing:-0.01em;line-height:0.95;">
+        <span class="block">
+          {line1.map(({ ch, delay }) => (
+            <span class="hero-letter" style={`animation-delay:${delay}ms`}>{ch}</span>
+          ))}
+        </span>
+        <span class="block italic" style="color:var(--color-copper-soft);">
+          {line2.map(({ ch, delay }) => (
+            <span class="hero-letter" style={`animation-delay:${delay}ms`}>{ch}</span>
+          ))}
+        </span>
+      </h1>
+
+      <p
+        class="hero-letter mt-9 md:mt-12 max-w-xl text-[0.95rem] md:text-[1.05rem] leading-[1.7] text-[var(--color-champagne)]/80"
+        style={`animation-delay:${1400 + line2.length * 32}ms;`}
+      >{t.subtitle}</p>
+
+      <div
+        class="hero-letter mt-10 md:mt-14 flex items-center gap-6"
+        style={`animation-delay:${1700 + line2.length * 32}ms;`}
+      >
+        <a href="#reservation" class="btn-copper btn-copper--light">{t.cta}</a>
+        <span class="hidden sm:block w-12 h-px bg-[var(--color-champagne)]/30"></span>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <a
+      href="#manifesto"
+      class="hero-letter self-center pb-8 md:pb-10 inline-flex flex-col items-center gap-3 text-[0.7rem] text-[var(--color-champagne)]/60 hover:text-[var(--color-copper)] transition-colors"
+      style="letter-spacing:var(--tracking-wider-luxe);text-transform:uppercase;animation-delay:2200ms;"
+      aria-label={t.scroll}
+    >
+      <span>{t.scroll}</span>
+      <span class="block w-px h-8 bg-current"></span>
+    </a>
+  </div>
+</section>
