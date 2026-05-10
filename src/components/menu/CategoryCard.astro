@@ -10,68 +10,59 @@ interface Props {
   total: number;
   itemCount: number;
   itemsLabel: string;
-  enterLabel: string;
 }
 
-const { lang, category, index, total, itemCount, itemsLabel, enterLabel } = Astro.props;
+const { lang, category, index, total, itemCount, itemsLabel } = Astro.props;
 
 const href = localizedPath(lang, `/menu/${category.slug}`);
 const numeral = String(index).padStart(2, '0');
 const totalStr = String(total).padStart(2, '0');
 const name = localized(category.name, lang);
 const tagline = localized(category.tagline, lang);
-const description = localized(category.description, lang);
 ---
 
-<a href={href} class="group relative block">
-  <article class="relative bg-[var(--color-offwhite)] overflow-hidden">
-    <!-- Image -->
-    <div class="relative w-full overflow-hidden" style="aspect-ratio:4/5;">
-      <Image
-        src={category.cover}
-        alt={name}
-        width={1200}
-        height={1500}
-        loading="lazy"
-        decoding="async"
-        class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-      />
-      <!-- Tonal overlay -->
-      <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/45"></div>
-      <!-- Copper hairline corner ornaments -->
-      <div class="absolute top-4 start-4 w-6 h-6 border-t border-s border-[var(--color-copper)]/55"></div>
-      <div class="absolute bottom-4 end-4 w-6 h-6 border-b border-e border-[var(--color-copper)]/55"></div>
+<a href={href} class="group block relative overflow-hidden">
+  <article class="relative w-full overflow-hidden bg-[var(--color-charcoal)]" style="aspect-ratio:4/5;">
+    <Image
+      src={category.cover}
+      alt={name}
+      width={900}
+      height={1125}
+      loading="lazy"
+      decoding="async"
+      class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+    />
 
-      <!-- Numeral overlay -->
-      <span
-        class="absolute top-5 end-5 text-[var(--color-champagne)]/85 text-[0.72rem]"
-        style="letter-spacing:var(--tracking-wider-luxe);font-family:var(--font-body);"
-      >{numeral} <span class="text-[var(--color-champagne)]/45">/ {totalStr}</span></span>
+    <!-- Bottom gradient for legibility -->
+    <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none"></div>
 
-      <!-- Bottom caption -->
-      <div class="absolute inset-x-0 bottom-0 p-5 md:p-7">
-        <span class="block text-[0.68rem] text-[var(--color-champagne)]/70 mb-2" style="letter-spacing:var(--tracking-wider-luxe);text-transform:uppercase;">
-          {itemCount} {itemsLabel}
+    <!-- Corner ornaments -->
+    <span class="absolute top-3 start-3 w-5 h-5 border-t border-s border-[var(--color-copper)]/55 transition-all duration-500 group-hover:w-7 group-hover:h-7" aria-hidden="true"></span>
+    <span class="absolute bottom-3 end-3 w-5 h-5 border-b border-e border-[var(--color-copper)]/55 transition-all duration-500 group-hover:w-7 group-hover:h-7" aria-hidden="true"></span>
+
+    <!-- Top numeral -->
+    <span
+      class="absolute top-4 end-4 text-[var(--color-champagne)]/75 text-[0.65rem]"
+      style="letter-spacing:var(--tracking-wider-luxe);font-family:var(--font-body);"
+    >
+      {numeral}<span class="text-[var(--color-champagne)]/40"> / {totalStr}</span>
+    </span>
+
+    <!-- Bottom caption -->
+    <div class="absolute inset-x-0 bottom-0 p-5 md:p-7">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="block w-6 h-px bg-[var(--color-copper-soft)] transition-all duration-500 group-hover:w-12"></span>
+        <span class="text-[0.62rem] text-[var(--color-champagne)]/65" style="letter-spacing:var(--tracking-wider-luxe);text-transform:uppercase;">
+          {itemCount} · {itemsLabel}
         </span>
-        <h3
-          class="text-[var(--color-champagne)]"
-          style="font-family:var(--font-display);font-size:clamp(1.7rem,3vw,2.4rem);line-height:1.05;font-weight:400;"
-        >
-          <span class="block">{name}</span>
-          <span class="block italic text-[var(--color-copper-soft)] text-[0.68em] mt-1">{tagline}</span>
-        </h3>
       </div>
-    </div>
-
-    <!-- Description block beneath image -->
-    <div class="p-6 md:p-8 relative">
-      <p class="text-[0.92rem] md:text-[0.96rem] leading-[1.8] text-[var(--color-ink)]/75">
-        {description}
-      </p>
-      <div class="mt-6 flex items-center gap-3 text-[0.72rem] text-[var(--color-copper)]" style="letter-spacing:var(--tracking-wider-luxe);text-transform:uppercase;">
-        <span class="block w-8 h-px bg-[var(--color-copper)] transition-all duration-500 group-hover:w-16"></span>
-        <span>{enterLabel}</span>
-      </div>
+      <h3
+        class="text-[var(--color-champagne)]"
+        style="font-family:var(--font-display);font-size:clamp(1.4rem, 2.6vw, 2rem);line-height:1.1;font-weight:400;"
+      >
+        <span class="block">{name}</span>
+        <span class="block italic mt-0.5 text-[var(--color-copper-soft)] text-[0.62em]">{tagline}</span>
+      </h3>
     </div>
   </article>
 </a>

@@ -95,6 +95,12 @@
       "description": "Mi Mesa menüsü: salatalar, et yemekleri, Anadolu mutfağı, tatlılar ve içecekler. Mevsime göre yenilenen, hikayesi olan tabaklar.",
       "ogAlt": "Mi Mesa menüsü"
     },
+    "splash": {
+      "welcome": "Hoşgeldiniz",
+      "tagline": "Benim masam, benim sofram.",
+      "enterButton": "Menüye Git",
+      "backHome": "Anasayfa"
+    },
     "index": {
       "eyebrow": "Carte",
       "title": "Sofrayı,",
@@ -106,8 +112,12 @@
       "footnote": "Fiyatlar Türk Lirası cinsindendir. Menümüz mevsime, ürünün gününe ve şefin ilhamına göre değişiklik gösterebilir. Alerji ve özel diyet tercihleriniz için lütfen ekibimize bilgi veriniz."
     },
     "category": {
-      "backToMenu": "Tüm kategoriler",
+      "backToMenu": "Kategoriler",
+      "backToSplash": "Menü",
       "itemsLabel": "tabak"
+    },
+    "topbar": {
+      "back": "Geri"
     }
   }
 }

@@ -1,0 +1,55 @@
+---
+import { type Locale, getDict, localizedPath } from '@/lib/i18n';
+import LangSwitcher from '@/components/LangSwitcher.astro';
+
+interface Props {
+  lang: Locale;
+  backHref: string;
+  backLabel: string;
+  title?: string;
+}
+
+const { lang, backHref, backLabel, title } = Astro.props;
+const homeHref = localizedPath(lang, '/');
+const dir = lang === 'ar' ? 'rtl' : 'ltr';
+---
+
+<header class="sticky top-0 inset-x-0 z-40 bg-[var(--color-champagne)]/92 backdrop-blur-md border-b border-[var(--color-copper)]/20">
+  <div class="container-luxe relative h-[58px] md:h-[68px] flex items-center justify-between gap-4">
+    <!-- Back -->
+    <a
+      href={backHref}
+      class="inline-flex items-center gap-2 text-[0.72rem] text-[var(--color-ink)]/75 hover:text-[var(--color-copper)] transition-colors"
+      style="letter-spacing:var(--tracking-wide-luxe);text-transform:uppercase;"
+      aria-label={backLabel}
+    >
+      <svg
+        aria-hidden="true"
+        class:list={["w-4 h-4 flex-shrink-0", lang === 'ar' && "scale-x-[-1]"]}
+        viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"
+      >
+        <path d="M10.5 13L5.5 8L10.5 3" />
+      </svg>
+      <span class="hidden sm:inline">{backLabel}</span>
+    </a>
+
+    <!-- Centered title (Mi Mesa logo or category name) -->
+    <a
+      href={homeHref}
+      class="absolute left-1/2 -translate-x-1/2 group"
+      aria-label="Mi Mesa"
+    >
+      <span
+        class="block text-center"
+        style="font-family:var(--font-display);font-style:italic;font-weight:500;font-size:clamp(1.05rem, 2vw, 1.35rem);line-height:1;color:var(--color-ink);"
+      >
+        {title ?? 'Mi Mesa'}
+      </span>
+    </a>
+
+    <!-- Lang switcher -->
+    <div>
+      <LangSwitcher current={lang} />
+    </div>
+  </div>
+</header>

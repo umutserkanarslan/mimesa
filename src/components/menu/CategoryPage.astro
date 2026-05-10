@@ -1,9 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Navbar from '@/components/Navbar.astro';
-import Footer from '@/components/Footer.astro';
+import MenuTopBar from '@/components/menu/MenuTopBar.astro';
 import FadeIn from '@/components/FadeIn.astro';
-import MenuHero from '@/components/menu/MenuHero.astro';
 import MenuItemCard from '@/components/menu/MenuItemCard.astro';
 import { type Locale, getDict, localizedPath } from '@/lib/i18n';
 import { getCategoryBySlug, getItemsByCategory, localized } from '@/lib/menu';
@@ -29,26 +27,43 @@ const tagline = localized(category.tagline, lang);
 const description = localized(category.description, lang);
 
 const pageTitle = dict.menuPage.index.categoryMetaTitle.replace('{name}', name);
-const menuHref = localizedPath(lang, '/menu');
+const categoriesHref = localizedPath(lang, '/menu/kategoriler');
 ---
 
 <BaseLayout lang={lang} title={pageTitle} description={description} ogAlt={m.ogAlt}>
-  <Navbar lang={lang} />
+  <MenuTopBar
+    lang={lang}
+    backHref={categoriesHref}
+    backLabel={c.backToMenu}
+    title={name}
+  />
 
-  <main class="bg-[var(--color-champagne)]">
-    <MenuHero
-      lang={lang}
-      eyebrow={tagline}
-      title={name}
-      titleEm={`— ${items.length} ${c.itemsLabel}`}
-      subtitle={description}
-      backHref={menuHref}
-      backLabel={c.backToMenu}
-    />
+  <main class="bg-[var(--color-champagne)] grain-bg">
+    <!-- Compact category header -->
+    <section class="relative pt-12 md:pt-16 pb-6 md:pb-10">
+      <div class="container-luxe text-center max-w-2xl mx-auto">
+        <span class="eyebrow">{tagline}</span>
+        <h1
+          class="mt-4"
+          style="font-family:var(--font-display);font-size:clamp(2rem, 5vw, 3.5rem);line-height:1.05;letter-spacing:-0.01em;font-weight:400;color:var(--color-ink);"
+        >
+          {name}
+        </h1>
+        <p class="mt-5 text-[0.95rem] leading-[1.75] text-[var(--color-ink)]/70 max-w-xl mx-auto">
+          {description}
+        </p>
+        <div class="mt-7 flex items-center justify-center gap-3 text-[0.7rem] text-[var(--color-copper)]" style="letter-spacing:var(--tracking-wider-luxe);text-transform:uppercase;">
+          <span class="block w-6 h-px bg-[var(--color-copper)]/60"></span>
+          <span>{items.length} · {c.itemsLabel}</span>
+          <span class="block w-6 h-px bg-[var(--color-copper)]/60"></span>
+        </div>
+      </div>
+    </section>
 
-    <section class="relative bg-[var(--color-offwhite)] grain-bg pb-28 md:pb-44 pt-16 md:pt-24">
-      <div class="container-luxe relative z-10">
-        <div class="max-w-4xl mx-auto">
+    <!-- Items list -->
+    <section class="relative pb-20 md:pb-28 pt-4 md:pt-8">
+      <div class="container-luxe">
+        <div class="max-w-3xl mx-auto bg-[var(--color-offwhite)] px-5 sm:px-8 md:px-12 py-2 md:py-4">
           <ul class="divide-y divide-[var(--color-copper)]/15">
             {items.map((item, i) => (
               <li>
@@ -58,30 +73,27 @@ const menuHref = localizedPath(lang, '/menu');
               </li>
             ))}
           </ul>
-
-          <FadeIn delay={120}>
-            <div class="mt-20 md:mt-24 flex items-center justify-between gap-6 pt-12 border-t border-[var(--color-copper)]/30">
-              <a
-                href={menuHref}
-                class="inline-flex items-center gap-3 text-[0.74rem] text-[var(--color-copper)] hover:text-[var(--color-charcoal)] transition-colors"
-                style="letter-spacing:var(--tracking-wider-luxe);text-transform:uppercase;"
-              >
-                <span class="block w-8 h-px bg-current"></span>
-                {c.backToMenu}
-              </a>
-
-              <span
-                class="hidden sm:inline-block text-[0.7rem] text-[var(--color-ink)]/50"
-                style="letter-spacing:var(--tracking-wide-luxe);text-transform:uppercase;"
-              >
-                Mi Mesa
-              </span>
-            </div>
-          </FadeIn>
         </div>
+
+        <FadeIn delay={120}>
+          <div class="mt-12 md:mt-16 flex items-center justify-center">
+            <a
+              href={categoriesHref}
+              class="inline-flex items-center gap-3 text-[0.74rem] text-[var(--color-copper)] hover:text-[var(--color-charcoal)] transition-colors"
+              style="letter-spacing:var(--tracking-wider-luxe);text-transform:uppercase;"
+            >
+              <svg
+                aria-hidden="true"
+                class:list={["w-4 h-4", lang === 'ar' && "scale-x-[-1]"]}
+                viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"
+              >
+                <path d="M10.5 13L5.5 8L10.5 3" />
+              </svg>
+              {c.backToMenu}
+            </a>
+          </div>
+        </FadeIn>
       </div>
     </section>
   </main>
-
-  <Footer lang={lang} />
 </BaseLayout>

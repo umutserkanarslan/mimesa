@@ -95,6 +95,12 @@
       "description": "Mi Mesa menu: salads, fire-cooked meats, Anatolian kitchen, sweets and sips. Plates with a story, renewed by the season.",
       "ogAlt": "Mi Mesa menu"
     },
+    "splash": {
+      "welcome": "Welcome",
+      "tagline": "My table, my feast.",
+      "enterButton": "Browse the menu",
+      "backHome": "Home"
+    },
     "index": {
       "eyebrow": "Carte",
       "title": "Let us open,",
@@ -106,8 +112,12 @@
       "footnote": "Prices are in Turkish Liras. Our menu shifts with the season, the day's harvest, and the chef's mood. Please share any allergies or dietary preferences with our team."
     },
     "category": {
-      "backToMenu": "All categories",
+      "backToMenu": "Categories",
+      "backToSplash": "Menu",
       "itemsLabel": "plates"
+    },
+    "topbar": {
+      "back": "Back"
     }
   }
 }
