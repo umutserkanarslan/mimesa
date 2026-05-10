@@ -38,6 +38,13 @@ export function localizedPath(lang: Locale, path = '/'): string {
   return `/${lang}${clean === '/' ? '' : clean}`;
 }
 
+const localePrefixRe = new RegExp(`^/(${locales.filter((l) => l !== defaultLocale).join('|')})(?=/|$)`);
+
+export function stripLocalePrefix(pathname: string): string {
+  const stripped = pathname.replace(localePrefixRe, '');
+  return stripped === '' ? '/' : stripped;
+}
+
 export function altLocaleHrefs(currentPath = '/'): Array<{ lang: Locale; href: string; hreflang: string }> {
   return locales.map((l) => ({
     lang: l,
