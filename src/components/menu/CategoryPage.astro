@@ -1,0 +1,87 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Navbar from '@/components/Navbar.astro';
+import Footer from '@/components/Footer.astro';
+import FadeIn from '@/components/FadeIn.astro';
+import MenuHero from '@/components/menu/MenuHero.astro';
+import MenuItemCard from '@/components/menu/MenuItemCard.astro';
+import { type Locale, getDict, localizedPath } from '@/lib/i18n';
+import { getCategoryBySlug, getItemsByCategory, localized } from '@/lib/menu';
+
+interface Props {
+  lang: Locale;
+  categorySlug: string;
+}
+
+const { lang, categorySlug } = Astro.props;
+const dict = getDict(lang);
+const m = dict.menuPage.meta;
+const c = dict.menuPage.category;
+
+const category = getCategoryBySlug(categorySlug);
+if (!category) {
+  return Astro.redirect(localizedPath(lang, '/menu'));
+}
+
+const items = getItemsByCategory(categorySlug);
+const name = localized(category.name, lang);
+const tagline = localized(category.tagline, lang);
+const description = localized(category.description, lang);
+
+const pageTitle = dict.menuPage.index.categoryMetaTitle.replace('{name}', name);
+const menuHref = localizedPath(lang, '/menu');
+---
+
+<BaseLayout lang={lang} title={pageTitle} description={description} ogAlt={m.ogAlt}>
+  <Navbar lang={lang} />
+
+  <main class="bg-[var(--color-champagne)]">
+    <MenuHero
+      lang={lang}
+      eyebrow={tagline}
+      title={name}
+      titleEm={`— ${items.length} ${c.itemsLabel}`}
+      subtitle={description}
+      backHref={menuHref}
+      backLabel={c.backToMenu}
+    />
+
+    <section class="relative bg-[var(--color-offwhite)] grain-bg pb-28 md:pb-44 pt-16 md:pt-24">
+      <div class="container-luxe relative z-10">
+        <div class="max-w-4xl mx-auto">
+          <ul class="divide-y divide-[var(--color-copper)]/15">
+            {items.map((item, i) => (
+              <li>
+                <FadeIn delay={Math.min(i, 4) * 40}>
+                  <MenuItemCard lang={lang} item={item} />
+                </FadeIn>
+              </li>
+            ))}
+          </ul>
+
+          <FadeIn delay={120}>
+            <div class="mt-20 md:mt-24 flex items-center justify-between gap-6 pt-12 border-t border-[var(--color-copper)]/30">
+              <a
+                href={menuHref}
+                class="inline-flex items-center gap-3 text-[0.74rem] text-[var(--color-copper)] hover:text-[var(--color-charcoal)] transition-colors"
+                style="letter-spacing:var(--tracking-wider-luxe);text-transform:uppercase;"
+              >
+                <span class="block w-8 h-px bg-current"></span>
+                {c.backToMenu}
+              </a>
+
+              <span
+                class="hidden sm:inline-block text-[0.7rem] text-[var(--color-ink)]/50"
+                style="letter-spacing:var(--tracking-wide-luxe);text-transform:uppercase;"
+              >
+                Mi Mesa
+              </span>
+            </div>
+          </FadeIn>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang={lang} />
+</BaseLayout>

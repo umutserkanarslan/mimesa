@@ -1,0 +1,66 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Navbar from '@/components/Navbar.astro';
+import Footer from '@/components/Footer.astro';
+import FadeIn from '@/components/FadeIn.astro';
+import MenuHero from '@/components/menu/MenuHero.astro';
+import CategoryCard from '@/components/menu/CategoryCard.astro';
+import { type Locale, getDict } from '@/lib/i18n';
+import { getCategories, getItemsByCategory } from '@/lib/menu';
+
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const dict = getDict(lang);
+const m = dict.menuPage.meta;
+const idx = dict.menuPage.index;
+
+const categories = getCategories();
+---
+
+<BaseLayout lang={lang} title={m.title} description={m.description} ogAlt={m.ogAlt}>
+  <Navbar lang={lang} />
+
+  <main class="bg-[var(--color-champagne)]">
+    <MenuHero
+      lang={lang}
+      eyebrow={idx.eyebrow}
+      title={idx.title}
+      titleEm={idx.titleEm}
+      subtitle={idx.subtitle}
+    />
+
+    <section class="relative bg-[var(--color-champagne)] grain-bg pb-28 md:pb-44">
+      <div class="container-luxe relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-x-12 md:gap-y-20 max-w-6xl mx-auto">
+          {categories.map((cat, i) => (
+            <FadeIn delay={Math.min(i, 3) * 60}>
+              <CategoryCard
+                lang={lang}
+                category={cat}
+                index={i + 1}
+                total={categories.length}
+                itemCount={getItemsByCategory(cat.slug).length}
+                itemsLabel={idx.itemsLabel}
+                enterLabel={idx.enterLabel}
+              />
+            </FadeIn>
+          ))}
+        </div>
+
+        <FadeIn delay={60}>
+          <div class="mt-24 md:mt-32 max-w-2xl mx-auto text-center">
+            <span class="block hairline mx-auto w-16 mb-6"></span>
+            <p
+              class="text-[0.86rem] md:text-[0.9rem] leading-[1.85] text-[var(--color-ink)]/60 italic"
+              style="font-family:var(--font-display);"
+            >
+              {idx.footnote}
+            </p>
+          </div>
+        </FadeIn>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang={lang} />
+</BaseLayout>

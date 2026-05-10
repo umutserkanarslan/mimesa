@@ -1,0 +1,83 @@
+---
+import { Image } from 'astro:assets';
+import { type Locale } from '@/lib/i18n';
+import { type MenuItem, localized, formatPrice, flagLabels } from '@/lib/menu';
+
+interface Props {
+  lang: Locale;
+  item: MenuItem;
+}
+
+const { lang, item } = Astro.props;
+const name = localized(item.name, lang);
+const description = localized(item.description, lang);
+const price = formatPrice(item.price, lang);
+const flags = item.flags ?? [];
+const isSignature = flags.includes('signature');
+---
+
+<article class="group grid grid-cols-12 gap-5 md:gap-8 py-9 md:py-12">
+  <!-- Image -->
+  <div class="col-span-4 md:col-span-3">
+    <div class="relative w-full overflow-hidden bg-[var(--color-champagne-soft)]" style="aspect-ratio:1/1;">
+      <Image
+        src={item.image}
+        alt={name}
+        width={600}
+        height={600}
+        loading="lazy"
+        decoding="async"
+        class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+      />
+      {isSignature && (
+        <span
+          class="absolute top-2 start-2 text-[0.6rem] text-[var(--color-champagne)] bg-[var(--color-copper)]/90 px-2 py-1"
+          style="letter-spacing:var(--tracking-wide-luxe);text-transform:uppercase;"
+        >
+          {localized(flagLabels.signature, lang)}
+        </span>
+      )}
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="col-span-8 md:col-span-9 flex flex-col justify-center">
+    <!-- Name + price row, with dotted leader -->
+    <div class="flex items-baseline gap-3">
+      <h3
+        class="flex-shrink-0"
+        style="font-family:var(--font-display);font-size:clamp(1.3rem,2.4vw,1.85rem);line-height:1.2;font-weight:400;color:var(--color-ink);"
+      >
+        {name}
+      </h3>
+      <span
+        class="flex-1 self-end translate-y-[-0.3em] border-b border-dotted border-[var(--color-copper)]/35"
+        aria-hidden="true"
+      ></span>
+      <span
+        class="flex-shrink-0 italic"
+        style="font-family:var(--font-display);font-size:clamp(1.05rem,2vw,1.45rem);font-weight:400;color:var(--color-copper);"
+      >
+        {price}
+      </span>
+    </div>
+
+    <p class="mt-3 text-[0.92rem] md:text-[0.98rem] leading-[1.75] text-[var(--color-ink)]/75 max-w-2xl">
+      {description}
+    </p>
+
+    {flags.length > 0 && (
+      <ul class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
+        {flags.filter((f) => f !== 'signature').map((flag) => (
+          <li
+            class="inline-flex items-center gap-2 text-[0.68rem] text-[var(--color-ink)]/55"
+            style="letter-spacing:var(--tracking-wide-luxe);text-transform:uppercase;"
+          >
+            <span class="block w-1 h-1 rounded-full bg-[var(--color-copper)]/55"></span>
+            {localized(flagLabels[flag], lang)}
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+</article>

@@ -1,9 +1,10 @@
 ---
-import { type Locale, getDict } from '@/lib/i18n';
+import { type Locale, getDict, localizedPath } from '@/lib/i18n';
 import FadeIn from './FadeIn.astro';
 interface Props { lang: Locale }
 const { lang } = Astro.props;
 const t = getDict(lang).menu;
+const menuHref = localizedPath(lang, '/menu');
 ---
 
 <section id="menu" class="relative bg-[var(--color-champagne)] py-28 md:py-44 overflow-hidden grain-bg">
@@ -47,7 +48,7 @@ const t = getDict(lang).menu;
         </h2>
         <p class="mt-7 mx-auto max-w-xl text-[1rem] leading-[1.8] text-[var(--color-ink)]/75">{t.body}</p>
 
-        <a href="#menu" class="mt-10 inline-flex btn-copper">{t.cta}</a>
+        <a href={menuHref} class="mt-10 inline-flex btn-copper">{t.cta}</a>
       </article>
     </FadeIn>
   </div>

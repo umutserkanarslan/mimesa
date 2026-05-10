@@ -1,5 +1,5 @@
 ---
-import { type Locale, getDict } from '@/lib/i18n';
+import { type Locale, getDict, localizedPath } from '@/lib/i18n';
 import LangSwitcher from './LangSwitcher.astro';
 
 interface Props {
@@ -8,13 +8,18 @@ interface Props {
 const { lang } = Astro.props;
 const t = getDict(lang).nav;
 
+const home = localizedPath(lang, '/');
+const menu = localizedPath(lang, '/menu');
+
 const links = [
-  { href: '#manifesto', label: t.manifesto },
-  { href: '#heritage', label: t.heritage },
-  { href: '#menu', label: t.menu },
-  { href: '#chef', label: t.chef },
-  { href: '#contact', label: t.contact },
+  { href: `${home}#manifesto`, label: t.manifesto },
+  { href: `${home}#heritage`, label: t.heritage },
+  { href: menu, label: t.menu },
+  { href: `${home}#chef`, label: t.chef },
+  { href: `${home}#contact`, label: t.contact },
 ];
+
+const reservationHref = `${home}#reservation`;
 ---
 
 <header
@@ -40,7 +45,7 @@ const links = [
     <div class="flex items-center gap-5 md:gap-7">
       <LangSwitcher current={lang} />
       <a
-        href="#reservation"
+        href={reservationHref}
         class="hidden md:inline-flex btn-copper"
       >{t.reservation}</a>
       <button
@@ -93,7 +98,7 @@ const links = [
     </nav>
     <div class="mt-auto pb-10 flex items-center justify-between">
       <LangSwitcher current={lang} tone="light" />
-      <a href="#reservation" data-mobile-link class="btn-copper btn-copper--light">{t.reservation}</a>
+      <a href={reservationHref} data-mobile-link class="btn-copper btn-copper--light">{t.reservation}</a>
     </div>
   </div>
 </div>
