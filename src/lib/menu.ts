@@ -1,5 +1,5 @@
 import type { Locale } from './i18n';
-import { menuData } from '@/data/menu';
+import { supabase, type DbCategory, type DbItem } from './supabase';
 
 export type Translated = Record<Locale, string>;
 
@@ -15,9 +15,11 @@ export interface MenuItem {
   currency: 'TRY';
   image: string;
   flags?: MenuFlag[];
+  sortOrder: number;
 }
 
 export interface MenuCategory {
+  id: string;
   slug: string;
   name: Translated;
   tagline: Translated;
@@ -26,21 +28,71 @@ export interface MenuCategory {
   order: number;
 }
 
-export interface MenuData {
-  categories: MenuCategory[];
-  items: MenuItem[];
+let categoriesCache: MenuCategory[] | null = null;
+let itemsCache: MenuItem[] | null = null;
+
+const FALLBACK_IMAGE =
+  'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=900&q=72';
+
+function toCategory(row: DbCategory): MenuCategory {
+  return {
+    id: row.id,
+    slug: row.slug,
+    name: row.name as Translated,
+    tagline: row.tagline as Translated,
+    description: row.description as Translated,
+    cover: row.cover ?? FALLBACK_IMAGE,
+    order: row.sort_order,
+  };
 }
 
-export function getCategories(): MenuCategory[] {
-  return [...menuData.categories].sort((a, b) => a.order - b.order);
+function toItem(row: DbItem): MenuItem {
+  return {
+    id: row.id,
+    slug: row.slug,
+    category: row.category_slug,
+    name: row.name as Translated,
+    description: row.description as Translated,
+    price: Number(row.price),
+    currency: row.currency as 'TRY',
+    image: row.image ?? FALLBACK_IMAGE,
+    flags: (row.flags as MenuFlag[]) ?? [],
+    sortOrder: row.sort_order,
+  };
 }
 
-export function getCategoryBySlug(slug: string): MenuCategory | undefined {
-  return menuData.categories.find((c) => c.slug === slug);
+export async function getCategories(): Promise<MenuCategory[]> {
+  if (categoriesCache) return categoriesCache;
+  const { data, error } = await supabase
+    .from('categories')
+    .select('*')
+    .order('sort_order', { ascending: true });
+  if (error) throw error;
+  categoriesCache = (data ?? []).map(toCategory);
+  return categoriesCache;
 }
 
-export function getItemsByCategory(slug: string): MenuItem[] {
-  return menuData.items.filter((i) => i.category === slug);
+export async function getCategoryBySlug(slug: string): Promise<MenuCategory | undefined> {
+  const all = await getCategories();
+  return all.find((c) => c.slug === slug);
+}
+
+export async function getAllItems(): Promise<MenuItem[]> {
+  if (itemsCache) return itemsCache;
+  const { data, error } = await supabase
+    .from('items')
+    .select('*')
+    .eq('is_published', true)
+    .order('sort_order', { ascending: true })
+    .order('created_at', { ascending: true });
+  if (error) throw error;
+  itemsCache = (data ?? []).map(toItem);
+  return itemsCache;
+}
+
+export async function getItemsByCategory(slug: string): Promise<MenuItem[]> {
+  const all = await getAllItems();
+  return all.filter((i) => i.category === slug);
 }
 
 export function localized<T extends Translated>(value: T, lang: Locale): string {

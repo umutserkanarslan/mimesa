@@ -16,12 +16,12 @@ const dict = getDict(lang);
 const m = dict.menuPage.meta;
 const c = dict.menuPage.category;
 
-const category = getCategoryBySlug(categorySlug);
+const category = await getCategoryBySlug(categorySlug);
 if (!category) {
   return Astro.redirect(localizedPath(lang, '/menu'));
 }
 
-const items = getItemsByCategory(categorySlug);
+const items = await getItemsByCategory(categorySlug);
 const name = localized(category.name, lang);
 const tagline = localized(category.tagline, lang);
 const description = localized(category.description, lang);

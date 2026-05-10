@@ -4,7 +4,7 @@ import MenuTopBar from '@/components/menu/MenuTopBar.astro';
 import FadeIn from '@/components/FadeIn.astro';
 import CategoryCard from '@/components/menu/CategoryCard.astro';
 import { type Locale, getDict, localizedPath } from '@/lib/i18n';
-import { getCategories, getItemsByCategory } from '@/lib/menu';
+import { getCategories, getAllItems } from '@/lib/menu';
 
 interface Props { lang: Locale }
 const { lang } = Astro.props;
@@ -13,7 +13,8 @@ const m = dict.menuPage.meta;
 const idx = dict.menuPage.index;
 const c = dict.menuPage.category;
 
-const categories = getCategories();
+const categories = await getCategories();
+const allItems = await getAllItems();
 const splashHref = localizedPath(lang, '/menu');
 ---
 
@@ -50,7 +51,7 @@ const splashHref = localizedPath(lang, '/menu');
                 category={cat}
                 index={i + 1}
                 total={categories.length}
-                itemCount={getItemsByCategory(cat.slug).length}
+                itemCount={allItems.filter((it) => it.category === cat.slug).length}
                 itemsLabel={idx.itemsLabel}
               />
             </FadeIn>

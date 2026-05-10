@@ -9,19 +9,25 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check": "astro check"
+    "check": "astro check",
+    "seed": "tsx scripts/seed.ts"
   },
   "dependencies": {
-    "astro": "^5.1.0",
-    "@astrojs/sitemap": "^3.2.1",
     "@astrojs/check": "^0.9.4",
-    "typescript": "^5.7.2",
-    "tailwindcss": "^4.0.0",
-    "@tailwindcss/vite": "^4.0.0",
-    "@fontsource/playfair-display": "^5.1.0",
-    "@fontsource/jost": "^5.1.0",
+    "@astrojs/sitemap": "^3.2.1",
     "@fontsource/amiri": "^5.1.0",
     "@fontsource/ibm-plex-sans-arabic": "^5.1.0",
-    "sharp": "^0.33.5"
+    "@fontsource/jost": "^5.1.0",
+    "@fontsource/playfair-display": "^5.1.0",
+    "@supabase/supabase-js": "^2.105.4",
+    "@tailwindcss/vite": "^4.0.0",
+    "astro": "^5.1.0",
+    "dotenv": "^17.4.2",
+    "sharp": "^0.33.5",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.2"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0"
   }
 }
