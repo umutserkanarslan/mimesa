@@ -43,20 +43,20 @@ const isSignature = flags.includes('signature');
   <!-- Content -->
   <div class="col-span-8 md:col-span-9 flex flex-col justify-center">
     <!-- Name + price row, with dotted leader -->
-    <div class="flex items-baseline gap-3">
+    <div class="flex items-baseline gap-2 sm:gap-3">
       <h3
-        class="flex-shrink-0"
-        style="font-family:var(--font-display);font-size:clamp(1.3rem,2.4vw,1.85rem);line-height:1.2;font-weight:400;color:var(--color-ink);"
+        class="min-w-0 break-words"
+        style="font-family:var(--font-display);font-size:clamp(1.15rem,2.4vw,1.85rem);line-height:1.2;font-weight:400;color:var(--color-ink);"
       >
         {name}
       </h3>
       <span
-        class="flex-1 self-end translate-y-[-0.3em] border-b border-dotted border-[var(--color-copper)]/35"
+        class="flex-1 self-end translate-y-[-0.3em] border-b border-dotted border-[var(--color-copper)]/35 min-w-[1.5rem]"
         aria-hidden="true"
       ></span>
       <span
-        class="flex-shrink-0 italic"
-        style="font-family:var(--font-display);font-size:clamp(1.05rem,2vw,1.45rem);font-weight:400;color:var(--color-copper);"
+        class="flex-shrink-0 italic whitespace-nowrap"
+        style="font-family:var(--font-display);font-size:clamp(1rem,2vw,1.45rem);font-weight:400;color:var(--color-copper);"
       >
         {price}
       </span>

@@ -36,12 +36,12 @@ const dir = lang === 'ar' ? 'rtl' : 'ltr';
     <!-- Centered title (Mi Mesa logo or category name) -->
     <a
       href={homeHref}
-      class="absolute left-1/2 -translate-x-1/2 group"
+      class="absolute left-1/2 -translate-x-1/2 group max-w-[52%] sm:max-w-[60%] md:max-w-[70%]"
       aria-label="Mi Mesa"
     >
       <span
-        class="block text-center"
-        style="font-family:var(--font-display);font-style:italic;font-weight:500;font-size:clamp(1.05rem, 2vw, 1.35rem);line-height:1;color:var(--color-ink);"
+        class="block text-center truncate"
+        style="font-family:var(--font-display);font-style:italic;font-weight:500;font-size:clamp(0.95rem, 2vw, 1.35rem);line-height:1.1;color:var(--color-ink);"
       >
         {title ?? 'Mi Mesa'}
       </span>
