@@ -15,11 +15,11 @@ const dir = lang === 'ar' ? 'rtl' : 'ltr';
 ---
 
 <header class="sticky top-0 inset-x-0 z-40 bg-[var(--color-champagne)]/92 backdrop-blur-md border-b border-[var(--color-copper)]/20">
-  <div class="container-luxe relative h-[58px] md:h-[68px] flex items-center justify-between gap-4">
+  <div class="container-luxe h-[58px] md:h-[68px] flex items-center gap-3 sm:gap-4">
     <!-- Back -->
     <a
       href={backHref}
-      class="inline-flex items-center gap-2 text-[0.72rem] text-[var(--color-ink)]/75 hover:text-[var(--color-copper)] transition-colors"
+      class="flex-shrink-0 inline-flex items-center gap-2 text-[0.72rem] text-[var(--color-ink)]/75 hover:text-[var(--color-copper)] transition-colors"
       style="letter-spacing:var(--tracking-wide-luxe);text-transform:uppercase;"
       aria-label={backLabel}
     >
@@ -33,22 +33,22 @@ const dir = lang === 'ar' ? 'rtl' : 'ltr';
       <span class="hidden sm:inline">{backLabel}</span>
     </a>
 
-    <!-- Centered title (Mi Mesa logo or category name) -->
+    <!-- Title (Mi Mesa logo or category name) -->
     <a
       href={homeHref}
-      class="absolute left-1/2 -translate-x-1/2 group max-w-[52%] sm:max-w-[60%] md:max-w-[70%]"
+      class="flex-1 min-w-0 group"
       aria-label="Mi Mesa"
     >
       <span
-        class="block text-center truncate"
-        style="font-family:var(--font-display);font-style:italic;font-weight:500;font-size:clamp(0.95rem, 2vw, 1.35rem);line-height:1.1;color:var(--color-ink);"
+        class="block text-center truncate px-1"
+        style="font-family:var(--font-display);font-style:italic;font-weight:500;font-size:clamp(0.9rem, 2vw, 1.35rem);line-height:1.1;color:var(--color-ink);"
       >
         {title ?? 'Mi Mesa'}
       </span>
     </a>
 
     <!-- Lang switcher -->
-    <div>
+    <div class="flex-shrink-0">
       <LangSwitcher current={lang} />
     </div>
   </div>
