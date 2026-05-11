@@ -38,7 +38,10 @@ const portrait = 'https://images.unsplash.com/photo-1581349485608-9469926a8e5e?a
         <FadeIn delay={240}>
           <h2 style="font-family:var(--font-display);font-size:clamp(2.2rem,5vw,4.2rem);line-height:1.05;font-weight:400;">
             {t.title && <span class="block">{t.title}</span>}
-            <span class="block italic" style="color:var(--color-copper);">{t.titleEm}</span>
+            <span class="block">
+              {t.titleLead && <span style="color:var(--color-ink);">{t.titleLead} </span>}
+              <span class="italic" style="color:var(--color-copper);">{t.titleEm}</span>
+            </span>
           </h2>
         </FadeIn>
 
