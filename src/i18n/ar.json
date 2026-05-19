@@ -117,7 +117,8 @@
     "category": {
       "backToMenu": "الفئات",
       "backToSplash": "القائمة",
-      "itemsLabel": "أطباق"
+      "itemsLabel": "أطباق",
+      "askChef": "اسأل الشيف"
     },
     "topbar": {
       "back": "رجوع"

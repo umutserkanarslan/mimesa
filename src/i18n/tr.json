@@ -117,7 +117,8 @@
     "category": {
       "backToMenu": "Kategoriler",
       "backToSplash": "Menü",
-      "itemsLabel": "tabak"
+      "itemsLabel": "tabak",
+      "askChef": "Şefe sorunuz"
     },
     "topbar": {
       "back": "Geri"

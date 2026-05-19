@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import { type Locale } from '@/lib/i18n';
+import { type Locale, getDict } from '@/lib/i18n';
 import { type MenuItem, localized, formatPrice, flagLabels } from '@/lib/menu';
 
 interface Props {
@@ -9,9 +9,13 @@ interface Props {
 }
 
 const { lang, item } = Astro.props;
+const dict = getDict(lang);
 const name = localized(item.name, lang);
 const description = localized(item.description, lang);
-const price = formatPrice(item.price, lang);
+// When price is 0 (the import script's "no price set" sentinel for items
+// the owner hasn't priced yet), show "Şefe sorunuz" instead of "0 ₺".
+const askChef = !item.priceAlt && (!item.price || item.price <= 0);
+const price = askChef ? dict.menu.category.askChef : formatPrice(item.price, lang);
 const priceAlt = item.priceAlt != null ? formatPrice(item.priceAlt, lang) : null;
 const flags = item.flags ?? [];
 const isSignature = flags.includes('signature');

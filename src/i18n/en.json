@@ -117,7 +117,8 @@
     "category": {
       "backToMenu": "Categories",
       "backToSplash": "Menu",
-      "itemsLabel": "plates"
+      "itemsLabel": "plates",
+      "askChef": "Ask the chef"
     },
     "topbar": {
       "back": "Back"
