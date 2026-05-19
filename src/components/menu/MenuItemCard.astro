@@ -15,7 +15,7 @@ const description = localized(item.description, lang);
 // When price is 0 (the import script's "no price set" sentinel for items
 // the owner hasn't priced yet), show "Şefe sorunuz" instead of "0 ₺".
 const askChef = !item.priceAlt && (!item.price || item.price <= 0);
-const price = askChef ? dict.menu.category.askChef : formatPrice(item.price, lang);
+const price = askChef ? dict.menuPage.category.askChef : formatPrice(item.price, lang);
 const priceAlt = item.priceAlt != null ? formatPrice(item.priceAlt, lang) : null;
 const flags = item.flags ?? [];
 const isSignature = flags.includes('signature');
