@@ -12,6 +12,9 @@ export interface MenuItem {
   name: Translated;
   description: Translated;
   price: number;
+  priceLabel: string | null;
+  priceAlt: number | null;
+  priceAltLabel: string | null;
   currency: 'TRY';
   image: string;
   flags?: MenuFlag[];
@@ -51,6 +54,9 @@ function toItem(row: DbItem): MenuItem {
     name: row.name as Translated,
     description: row.description as Translated,
     price: Number(row.price),
+    priceLabel: row.price_label ?? null,
+    priceAlt: row.price_alt == null ? null : Number(row.price_alt),
+    priceAltLabel: row.price_alt_label ?? null,
     currency: row.currency as 'TRY',
     image: row.image ?? FALLBACK_IMAGE,
     flags: (row.flags as MenuFlag[]) ?? [],

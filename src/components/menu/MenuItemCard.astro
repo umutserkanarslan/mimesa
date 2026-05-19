@@ -12,6 +12,7 @@ const { lang, item } = Astro.props;
 const name = localized(item.name, lang);
 const description = localized(item.description, lang);
 const price = formatPrice(item.price, lang);
+const priceAlt = item.priceAlt != null ? formatPrice(item.priceAlt, lang) : null;
 const flags = item.flags ?? [];
 const isSignature = flags.includes('signature');
 ---
@@ -55,10 +56,27 @@ const isSignature = flags.includes('signature');
         aria-hidden="true"
       ></span>
       <span
-        class="flex-shrink-0 italic whitespace-nowrap"
+        class="flex-shrink-0 italic whitespace-nowrap text-right"
         style="font-family:var(--font-display);font-size:clamp(1rem,2vw,1.45rem);font-weight:400;color:var(--color-copper);"
       >
-        {price}
+        {priceAlt ? (
+          <span class="flex flex-col items-end leading-[1.15]">
+            <span>
+              {item.priceLabel && (
+                <span class="opacity-60 not-italic text-[0.72em] me-1.5" style="letter-spacing:var(--tracking-wide-luxe);text-transform:uppercase;">{item.priceLabel}</span>
+              )}
+              {price}
+            </span>
+            <span>
+              {item.priceAltLabel && (
+                <span class="opacity-60 not-italic text-[0.72em] me-1.5" style="letter-spacing:var(--tracking-wide-luxe);text-transform:uppercase;">{item.priceAltLabel}</span>
+              )}
+              {priceAlt}
+            </span>
+          </span>
+        ) : (
+          price
+        )}
       </span>
     </div>
 
