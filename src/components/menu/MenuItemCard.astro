@@ -47,20 +47,22 @@ const isSignature = flags.includes('signature');
 
   <!-- Content -->
   <div class="col-span-8 md:col-span-9 flex flex-col justify-center">
-    <!-- Name + price row, with dotted leader -->
-    <div class="flex items-baseline gap-2 sm:gap-3">
+    <!-- Name + price row, with dotted leader on sm+; on mobile the price
+         drops below the name so long names like "Pastırmalı Tost" never
+         have to break mid-word. -->
+    <div class="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
       <h3
-        class="min-w-0 break-words"
-        style="font-family:var(--font-display);font-size:clamp(1.15rem,2.4vw,1.85rem);line-height:1.2;font-weight:400;color:var(--color-ink);"
+        class="min-w-0"
+        style="font-family:var(--font-display);font-size:clamp(1.05rem,2.4vw,1.85rem);line-height:1.2;font-weight:400;color:var(--color-ink);"
       >
         {name}
       </h3>
       <span
-        class="flex-1 self-end translate-y-[-0.3em] border-b border-dotted border-[var(--color-copper)]/35 min-w-[1.5rem]"
+        class="hidden sm:block flex-1 self-end translate-y-[-0.3em] border-b border-dotted border-[var(--color-copper)]/35 min-w-[1.5rem]"
         aria-hidden="true"
       ></span>
       <span
-        class="flex-shrink-0 italic whitespace-nowrap text-right"
+        class="self-end sm:self-auto flex-shrink-0 italic whitespace-nowrap text-right"
         style="font-family:var(--font-display);font-size:clamp(1rem,2vw,1.45rem);font-weight:400;color:var(--color-copper);"
       >
         {priceAlt ? (
