@@ -20,7 +20,7 @@ export function restaurantSchema(lang: Locale) {
     url: SITE,
     description,
     image: [`${SITE}/og-image.jpg`],
-    logo: `${SITE}/favicon.svg`,
+    logo: `${SITE}/logo.png`,
     telephone: '+905308219685',
     priceRange: '$$$',
     servesCuisine: ['Turkish', 'Anatolian', 'Mediterranean', 'Fine Dining'],
