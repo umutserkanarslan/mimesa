@@ -1,6 +1,6 @@
 import type { Locale } from './i18n';
 
-const SITE = 'https://mimesa.com';
+const SITE = 'https://mimesarestoran.com';
 
 export function restaurantSchema(lang: Locale) {
   const name = lang === 'ar' ? 'مي ميسا' : 'Mi Mesa';

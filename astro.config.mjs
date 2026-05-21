@@ -5,7 +5,7 @@ import vercel from '@astrojs/vercel';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  site: 'https://mimesa.com',
+  site: 'https://mimesarestoran.com',
   output: 'server',
   adapter: vercel({
     imageService: true,

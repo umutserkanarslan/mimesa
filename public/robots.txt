@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://mimesa.com/sitemap-index.xml
+Sitemap: https://mimesarestoran.com/sitemap-index.xml
