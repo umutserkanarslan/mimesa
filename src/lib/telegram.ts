@@ -84,8 +84,9 @@ export function buildOrderMessage(o: OrderForTelegram): string {
 export async function sendTelegram(
 	text: string
 ): Promise<{ ok: boolean; messageId?: number; error?: string }> {
-	const token = import.meta.env.TELEGRAM_BOT_TOKEN;
-	const chatId = import.meta.env.TELEGRAM_CHAT_ID;
+	// Read via process.env — see api/order.ts comment for why.
+	const token = process.env.TELEGRAM_BOT_TOKEN;
+	const chatId = process.env.TELEGRAM_CHAT_ID;
 	if (!token || !chatId) {
 		return { ok: false, error: 'telegram_env_missing' };
 	}

@@ -20,8 +20,12 @@ import { buildOrderMessage, sendTelegram } from '@/lib/telegram';
 
 export const prerender = false;
 
-const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL;
-const SERVICE_KEY = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
+// IMPORTANT: read via process.env, NOT import.meta.env.
+// Vite inlines `import.meta.env.X` at build time, which means any secret
+// referenced that way gets baked into the JS bundle. If the bundle ever
+// leaks (e.g. an accidental `git add -A` that catches .vercel/), the
+// secret leaks with it. `process.env.X` is resolved at runtime by Node
+// on Vercel, so the bundle stays clean.
 
 // Per-IP token bucket: max 5 requests / 60s. Cleared on cold start, which is
 // fine — this is a friction layer, not the only line of defence.
@@ -103,10 +107,12 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 		return json(400, { ok: false, error: 'bad_lines' });
 	}
 
-	if (!SUPABASE_URL || !SERVICE_KEY) {
+	const supabaseUrl = process.env.PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL;
+	const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+	if (!supabaseUrl || !serviceKey) {
 		return json(500, { ok: false, error: 'server_misconfigured' });
 	}
-	const admin = createClient(SUPABASE_URL, SERVICE_KEY, {
+	const admin = createClient(supabaseUrl, serviceKey, {
 		auth: { autoRefreshToken: false, persistSession: false }
 	});
 
