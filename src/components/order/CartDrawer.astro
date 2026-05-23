@@ -26,8 +26,9 @@ const isAr = lang === 'ar';
     data-cart-panel
     class:list={[
       'absolute top-0 bottom-0 w-full max-w-md bg-[var(--color-offwhite)] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.55)] flex flex-col transition-transform duration-300',
-      isAr ? 'start-0 -translate-x-full' : 'end-0 translate-x-full'
+      isAr ? 'start-0' : 'end-0'
     ]}
+    style={`transform: translateX(${isAr ? '-100%' : '100%'});`}
   >
     <header class="flex items-center justify-between px-5 md:px-7 h-[64px] border-b border-[var(--color-copper)]/20">
       <h2 style="font-family:var(--font-display);font-style:italic;font-weight:500;font-size:1.25rem;color:var(--color-ink);">
