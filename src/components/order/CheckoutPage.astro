@@ -1,0 +1,141 @@
+---
+// Checkout page — basket summary (left) + form (right). The basket summary is
+// rendered client-side from localStorage so it always reflects the current cart.
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import MenuTopBar from '@/components/menu/MenuTopBar.astro';
+import FadeIn from '@/components/FadeIn.astro';
+import OrderForm from '@/components/order/OrderForm.astro';
+import { type Locale, getDict, localizedPath } from '@/lib/i18n';
+
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const dict = getDict(lang);
+const m = dict.orderPage.meta;
+const t = dict.orderPage.checkout;
+const cart = dict.orderPage.cart;
+const browseHref = localizedPath(lang, '/siparis-ver/kategoriler');
+---
+
+<BaseLayout lang={lang} title={t.title} description={m.description} ogAlt={m.ogAlt}>
+  <MenuTopBar lang={lang} backHref={browseHref} backLabel={t.backToOrder} title={t.title} />
+
+  <main class="bg-[var(--color-champagne)] grain-bg pb-24">
+    <section class="relative pt-12 md:pt-16 pb-6 md:pb-10">
+      <div class="container-luxe text-center max-w-2xl mx-auto">
+        <span class="eyebrow">{dict.orderPage.index.eyebrow}</span>
+        <h1
+          class="mt-4"
+          style="font-family:var(--font-display);font-size:clamp(1.8rem, 4.4vw, 3rem);line-height:1.1;font-weight:400;color:var(--color-ink);"
+        >
+          {t.title}
+        </h1>
+        <p class="mt-4 text-[0.95rem] leading-[1.7] text-[var(--color-ink)]/70 max-w-md mx-auto">
+          {t.subtitle}
+        </p>
+        <span class="block hairline mx-auto w-12 mt-6"></span>
+      </div>
+    </section>
+
+    <section class="container-luxe">
+      <div class="grid grid-cols-12 gap-x-6 gap-y-12 max-w-5xl mx-auto">
+
+        <FadeIn class="col-span-12 md:col-span-5">
+          <div class="bg-[var(--color-offwhite)] p-5 md:p-7">
+            <h2
+              class="mb-5"
+              style="font-family:var(--font-display);font-style:italic;font-weight:500;font-size:1.4rem;color:var(--color-ink);"
+            >
+              {t.summaryTitle}
+            </h2>
+
+            <div data-summary-empty hidden class="text-[0.95rem] text-[var(--color-ink)]/65 italic">
+              <p>{t.summaryEmpty}</p>
+              <a href={browseHref} class="mt-4 inline-flex items-center gap-2 text-[0.78rem] uppercase text-[var(--color-copper)] hover:text-[var(--color-charcoal)]" style="letter-spacing:var(--tracking-wider-luxe);">
+                {cart.browseMenu}
+              </a>
+            </div>
+
+            <ul data-summary-lines class="divide-y divide-[var(--color-copper)]/15"></ul>
+
+            <div data-summary-total hidden class="mt-5 pt-4 border-t border-[var(--color-copper)]/30 flex items-baseline justify-between">
+              <span class="text-[0.78rem] uppercase text-[var(--color-ink)]/60" style="letter-spacing:var(--tracking-wide-luxe);">{cart.total}</span>
+              <span data-summary-total-value style="font-family:var(--font-display);font-size:1.5rem;font-weight:500;color:var(--color-copper);">0 ₺</span>
+            </div>
+          </div>
+        </FadeIn>
+
+        <FadeIn class="col-span-12 md:col-span-7" delay={120}>
+          <OrderForm lang={lang} />
+        </FadeIn>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<script>
+  import { readCart, cartTotal, onCartChange } from '@/lib/cart';
+
+  type Lang = 'tr' | 'en' | 'ar';
+
+  function formatPrice(n: number, lang: Lang): string {
+    const f = new Intl.NumberFormat(
+      lang === 'tr' ? 'tr-TR' : lang === 'ar' ? 'ar' : 'en-US',
+      { maximumFractionDigits: 0 }
+    );
+    return lang === 'ar' ? `${f.format(n)} ل.ت` : `${f.format(n)} ₺`;
+  }
+
+  const wire = () => {
+    const html = document.documentElement;
+    const lang = ((html.getAttribute('lang') ?? 'tr').split('-')[0] || 'tr') as Lang;
+    const empty = document.querySelector<HTMLElement>('[data-summary-empty]');
+    const linesEl = document.querySelector<HTMLElement>('[data-summary-lines]');
+    const totalWrap = document.querySelector<HTMLElement>('[data-summary-total]');
+    const totalVal = document.querySelector<HTMLElement>('[data-summary-total-value]');
+    if (!empty || !linesEl || !totalWrap || !totalVal) return;
+
+    const render = () => {
+      const cart = readCart();
+      if (cart.length === 0) {
+        empty.hidden = false;
+        linesEl.innerHTML = '';
+        totalWrap.hidden = true;
+        return;
+      }
+      empty.hidden = true;
+      totalWrap.hidden = false;
+      linesEl.innerHTML = '';
+      for (const line of cart) {
+        const li = document.createElement('li');
+        li.className = 'py-3 flex items-baseline justify-between gap-3';
+
+        const left = document.createElement('div');
+        left.className = 'min-w-0';
+        const name = document.createElement('div');
+        name.className = 'text-[0.95rem] text-[var(--color-ink)] truncate';
+        name.style.fontFamily = 'var(--font-display)';
+        name.textContent = line.priceLabel ? `${line.qty}× ${line.name} (${line.priceLabel})` : `${line.qty}× ${line.name}`;
+        const unit = document.createElement('div');
+        unit.className = 'text-[0.78rem] text-[var(--color-ink)]/55 italic';
+        unit.style.fontFamily = 'var(--font-display)';
+        unit.textContent = formatPrice(line.price, lang);
+        left.append(name, unit);
+
+        const right = document.createElement('span');
+        right.className = 'flex-shrink-0 italic';
+        right.style.fontFamily = 'var(--font-display)';
+        right.style.color = 'var(--color-copper)';
+        right.textContent = formatPrice(line.qty * line.price, lang);
+
+        li.append(left, right);
+        linesEl.appendChild(li);
+      }
+      totalVal.textContent = formatPrice(cartTotal(), lang);
+    };
+
+    render();
+    onCartChange(render);
+  };
+
+  document.addEventListener('astro:page-load', wire);
+</script>

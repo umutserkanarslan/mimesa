@@ -1,0 +1,78 @@
+---
+// Floating cart button (bottom-right). Wires three things:
+//   1. Click delegation for [data-add-cart] buttons across the page
+//   2. Live badge count synced to cart changes
+//   3. Open/close of the drawer (which lives in CartDrawer.astro)
+//
+// Mounted globally on order pages (BaseLayout decides by URL path).
+import { type Locale, getDict } from '@/lib/i18n';
+
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = getDict(lang).orderPage.cart;
+---
+
+<button
+  type="button"
+  data-cart-fab
+  aria-label={t.fabAria}
+  class="cart-fab fixed bottom-5 end-5 md:bottom-7 md:end-7 z-40 inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-full bg-[var(--color-copper)] text-[var(--color-champagne)] shadow-[0_10px_30px_-10px_rgba(0,0,0,0.45)] transition-transform duration-300 hover:scale-105"
+  hidden
+>
+  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 md:w-7 md:h-7">
+    <path d="M3 4h2l2.4 11.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6" />
+    <circle cx="9.5" cy="20" r="1.2" fill="currentColor" />
+    <circle cx="17" cy="20" r="1.2" fill="currentColor" />
+  </svg>
+  <span
+    data-cart-badge
+    class="absolute -top-1 -end-1 min-w-[22px] h-[22px] px-1.5 inline-flex items-center justify-center rounded-full bg-[var(--color-ink)] text-[var(--color-champagne)] text-[0.7rem] font-medium leading-none"
+  >0</span>
+</button>
+
+<script>
+  import { addLine, cartCount, onCartChange } from '@/lib/cart';
+
+  const wire = () => {
+    const fab = document.querySelector<HTMLButtonElement>('[data-cart-fab]');
+    const badge = document.querySelector<HTMLSpanElement>('[data-cart-badge]');
+    if (!fab || !badge) return;
+
+    const refresh = () => {
+      const n = cartCount();
+      badge.textContent = String(n);
+      fab.hidden = n === 0;
+    };
+    refresh();
+    onCartChange(refresh);
+
+    // Open the drawer (the drawer registers its own open handler too).
+    fab.addEventListener('click', () => {
+      document.dispatchEvent(new CustomEvent('mimesa:cart:open'));
+    });
+
+    // Delegated Add-to-Cart clicks. Buttons opt-in via [data-add-cart] +
+    // data-item-id, data-slug, data-name, data-image, data-price, data-price-label.
+    document.addEventListener('click', (e) => {
+      const t = e.target as HTMLElement | null;
+      if (!t) return;
+      const btn = t.closest('[data-add-cart]') as HTMLButtonElement | null;
+      if (!btn) return;
+      e.preventDefault();
+      const itemId = btn.dataset.itemId;
+      const slug = btn.dataset.slug;
+      const name = btn.dataset.name;
+      const image = btn.dataset.image;
+      const price = Number(btn.dataset.price);
+      const priceLabel = btn.dataset.priceLabel ?? null;
+      if (!itemId || !slug || !name || !image || !Number.isFinite(price) || price <= 0) return;
+      addLine({ itemId, slug, name, image, price, priceLabel }, 1);
+
+      // Brief flash on the button so the click feels acknowledged.
+      btn.classList.add('add-cart-btn--pulse');
+      setTimeout(() => btn.classList.remove('add-cart-btn--pulse'), 360);
+    });
+  };
+
+  document.addEventListener('astro:page-load', wire);
+</script>

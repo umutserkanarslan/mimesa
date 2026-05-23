@@ -1,0 +1,21 @@
+import { b as createAstro, c as createComponent, r as renderComponent, a as renderTemplate, m as maybeRenderHead, d as addAttribute } from './astro/server_2XIcTBoS.mjs';
+import 'piccolore';
+import { l as localizedPath, $ as $$BaseLayout, g as getDict } from './LangSwitcher_gwGoJj_h.mjs';
+import { $ as $$MenuTopBar } from './MenuTopBar_C24HPe-o.mjs';
+
+const $$Astro = createAstro("https://mimesarestoran.com");
+const $$ThanksPage = createComponent(($$result, $$props, $$slots) => {
+  const Astro2 = $$result.createAstro($$Astro, $$props, $$slots);
+  Astro2.self = $$ThanksPage;
+  const { lang } = Astro2.props;
+  const dict = getDict(lang);
+  const m = dict.orderPage.meta;
+  const t = dict.orderPage.thanks;
+  const homeHref = localizedPath(lang, "/");
+  const reorderHref = localizedPath(lang, "/siparis-ver/kategoriler");
+  const orderNoParam = Astro2.url.searchParams.get("no");
+  const orderNo = orderNoParam && /^\d+$/.test(orderNoParam) ? orderNoParam : null;
+  return renderTemplate`${renderComponent($$result, "BaseLayout", $$BaseLayout, { "lang": lang, "title": t.title, "description": m.description, "ogAlt": m.ogAlt }, { "default": ($$result2) => renderTemplate` ${renderComponent($$result2, "MenuTopBar", $$MenuTopBar, { "lang": lang, "backHref": homeHref, "backLabel": t.back, "title": t.title })} ${maybeRenderHead()}<main class="relative bg-[var(--color-champagne)] grain-bg min-h-[calc(100svh-58px)] md:min-h-[calc(100svh-68px)] flex items-center"> <div class="container-luxe text-center max-w-xl mx-auto py-24"> <span class="inline-flex items-center justify-center w-16 h-16 rounded-full border border-[var(--color-copper)]/55 text-[var(--color-copper)] mb-8"> <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7"> <path d="M5 12.5l4 4 10-10"></path> </svg> </span> <span class="eyebrow">${dict.orderPage.index.eyebrow}</span> <h1 class="mt-3" style="font-family:var(--font-display);font-size:clamp(2rem, 5vw, 3.4rem);line-height:1.1;font-weight:400;color:var(--color-ink);"> ${t.title} </h1> ${orderNo && renderTemplate`<p class="mt-5 text-[0.85rem] uppercase text-[var(--color-copper)]" style="letter-spacing:var(--tracking-wider-luxe);"> ${t.orderNoLabel} <span style="font-family:var(--font-display);font-style:italic;font-size:1.4rem;letter-spacing:0;text-transform:none;">#${orderNo}</span> </p>`} <p class="mt-6 text-[1rem] leading-[1.75] text-[var(--color-ink)]/75 max-w-md mx-auto"> ${t.subtitle} </p> <span class="block hairline mx-auto w-12 mt-9 mb-9"></span> <div class="flex flex-wrap items-center justify-center gap-4"> <a${addAttribute(homeHref, "href")} class="btn-copper">${t.back}</a> <a${addAttribute(reorderHref, "href")} class="text-[0.74rem] uppercase text-[var(--color-copper)] hover:text-[var(--color-charcoal)] transition-colors" style="letter-spacing:var(--tracking-wider-luxe);"> ${t.reorder} </a> </div> </div> </main> ` })}`;
+}, "C:/Users/Serkan/MiMesa/src/components/order/ThanksPage.astro", void 0);
+
+export { $$ThanksPage as $ };

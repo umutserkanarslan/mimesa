@@ -1,0 +1,151 @@
+---
+// Clone of MenuItemCard with one (and only one) difference: an Add-to-Cart
+// row at the bottom. Layout, typography, dual-price rendering, signature
+// pill, flag list — all carried over byte-for-byte from the menu card.
+import { Image } from 'astro:assets';
+import { type Locale, getDict } from '@/lib/i18n';
+import { type MenuItem, localized, formatPrice, flagLabels } from '@/lib/menu';
+
+interface Props {
+  lang: Locale;
+  item: MenuItem;
+}
+
+const { lang, item } = Astro.props;
+const dict = getDict(lang);
+const oc = dict.orderPage.category;
+const card = dict.orderPage.card;
+
+const askChef = !item.priceAlt && (!item.price || item.price <= 0);
+const name = localized(item.name, lang);
+const description = localized(item.description, lang);
+const price = askChef ? oc.askChef : formatPrice(item.price, lang);
+const priceAlt = item.priceAlt != null ? formatPrice(item.priceAlt, lang) : null;
+const flags = item.flags ?? [];
+const isSignature = flags.includes('signature');
+const hasDualPrice = item.priceAlt != null && !!item.priceLabel && !!item.priceAltLabel;
+---
+
+<article class="group grid grid-cols-12 gap-5 md:gap-8 py-9 md:py-12">
+  <!-- Image -->
+  <div class="col-span-4 md:col-span-3">
+    <div class="relative w-full overflow-hidden bg-[var(--color-champagne-soft)]" style="aspect-ratio:1/1;">
+      <Image
+        src={item.image}
+        alt={name}
+        width={600}
+        height={600}
+        loading="lazy"
+        decoding="async"
+        class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+      />
+      {isSignature && (
+        <span
+          class="absolute top-2 start-2 text-[0.6rem] text-[var(--color-champagne)] bg-[var(--color-copper)]/90 px-2 py-1"
+          style="letter-spacing:var(--tracking-wide-luxe);text-transform:uppercase;"
+        >
+          {localized(flagLabels.signature, lang)}
+        </span>
+      )}
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="col-span-8 md:col-span-9 flex flex-col justify-center">
+    <div class="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
+      <h3
+        class="min-w-0"
+        style="font-family:var(--font-display);font-size:clamp(1.05rem,2.4vw,1.85rem);line-height:1.2;font-weight:400;color:var(--color-ink);"
+      >
+        {name}
+      </h3>
+      <span
+        class="hidden sm:block flex-1 self-end translate-y-[-0.3em] border-b border-dotted border-[var(--color-copper)]/35 min-w-[1.5rem]"
+        aria-hidden="true"
+      ></span>
+      <span
+        class="self-end sm:self-auto flex-shrink-0 italic whitespace-nowrap text-right"
+        style="font-family:var(--font-display);font-size:clamp(1rem,2vw,1.45rem);font-weight:400;color:var(--color-copper);"
+      >
+        {priceAlt ? (
+          <span class="flex flex-col items-end leading-[1.15]">
+            <span>
+              {item.priceLabel && (
+                <span class="opacity-60 not-italic text-[0.72em] me-1.5" style="letter-spacing:var(--tracking-wide-luxe);text-transform:uppercase;">{item.priceLabel}</span>
+              )}
+              {price}
+            </span>
+            <span>
+              {item.priceAltLabel && (
+                <span class="opacity-60 not-italic text-[0.72em] me-1.5" style="letter-spacing:var(--tracking-wide-luxe);text-transform:uppercase;">{item.priceAltLabel}</span>
+              )}
+              {priceAlt}
+            </span>
+          </span>
+        ) : (
+          price
+        )}
+      </span>
+    </div>
+
+    <p class="mt-3 text-[0.92rem] md:text-[0.98rem] leading-[1.75] text-[var(--color-ink)]/75 max-w-2xl">
+      {description}
+    </p>
+
+    {flags.length > 0 && (
+      <ul class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
+        {flags.filter((f) => f !== 'signature').map((flag) => (
+          <li
+            class="inline-flex items-center gap-2 text-[0.68rem] text-[var(--color-ink)]/55"
+            style="letter-spacing:var(--tracking-wide-luxe);text-transform:uppercase;"
+          >
+            <span class="block w-1 h-1 rounded-full bg-[var(--color-copper)]/55"></span>
+            {localized(flagLabels[flag], lang)}
+          </li>
+        ))}
+      </ul>
+    )}
+
+    {!askChef && (
+      <div class="mt-5 flex flex-wrap items-center gap-2.5">
+        {hasDualPrice ? (
+          <>
+            <button
+              type="button"
+              class="add-cart-btn"
+              data-add-cart
+              data-item-id={item.id}
+              data-slug={item.slug}
+              data-name={name}
+              data-image={item.image}
+              data-price={item.price}
+              data-price-label={item.priceLabel}
+            >+ {item.priceLabel} · {price}</button>
+            <button
+              type="button"
+              class="add-cart-btn"
+              data-add-cart
+              data-item-id={item.id}
+              data-slug={item.slug}
+              data-name={name}
+              data-image={item.image}
+              data-price={item.priceAlt}
+              data-price-label={item.priceAltLabel}
+            >+ {item.priceAltLabel} · {priceAlt}</button>
+          </>
+        ) : (
+          <button
+            type="button"
+            class="add-cart-btn"
+            data-add-cart
+            data-item-id={item.id}
+            data-slug={item.slug}
+            data-name={name}
+            data-image={item.image}
+            data-price={item.price}
+          >{card.addToCart}</button>
+        )}
+      </div>
+    )}
+  </div>
+</article>

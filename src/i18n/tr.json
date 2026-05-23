@@ -8,6 +8,7 @@
     "manifesto": "Manifesto",
     "heritage": "Miras",
     "menu": "Menü",
+    "order": "Sipariş Ver",
     "chef": "Şef",
     "reservation": "Rezervasyon",
     "contact": "İletişim",
@@ -91,6 +92,85 @@
   "footer": {
     "tagline": "Benim masam, benim sofram.",
     "rights": "Tüm hakları saklıdır."
+  },
+  "orderPage": {
+    "meta": {
+      "title": "Sipariş Ver — Mi Mesa",
+      "description": "Mi Mesa'dan paket / eve servis sipariş verin. Ekibimiz 5 dakika içinde arar.",
+      "ogAlt": "Mi Mesa siparişi"
+    },
+    "splash": {
+      "welcome": "Buyrun, sipariş alalım",
+      "tagline": "Benim masam, benim sofram.",
+      "enterButton": "Menüye git",
+      "backHome": "Anasayfa"
+    },
+    "index": {
+      "eyebrow": "Sipariş",
+      "title": "Sofrayı,",
+      "titleEm": "evinize taşıyalım.",
+      "subtitle": "Sepete ekleyin, telefonunuza onay düşsün. Ekibimiz 5 dakika içinde arayarak teyit eder.",
+      "itemsLabel": "tabak",
+      "categoryMetaTitle": "{name} — Mi Mesa Sipariş",
+      "footnote": "Fiyatlar Türk Lirası cinsindendir. Sipariş alındıktan sonra ekibimiz telefonunuzu arayarak teyit eder. Ödeme kapıda nakit veya kart ile yapılır."
+    },
+    "category": {
+      "backToOrder": "Kategoriler",
+      "backToSplash": "Sipariş",
+      "itemsLabel": "tabak",
+      "askChef": "Şefe sorunuz"
+    },
+    "card": {
+      "addToCart": "+ Sepete Ekle",
+      "added": "Eklendi"
+    },
+    "cart": {
+      "title": "Sepetiniz",
+      "empty": "Sepetiniz henüz boş.",
+      "browseMenu": "Menüye dön",
+      "qty": "Adet",
+      "remove": "Kaldır",
+      "subtotal": "Ara toplam",
+      "total": "Toplam",
+      "checkout": "Siparişi Tamamla",
+      "fabAria": "Sepeti aç",
+      "close": "Kapat"
+    },
+    "checkout": {
+      "title": "Siparişi tamamlayın",
+      "subtitle": "Ekibimiz adresinize 5 dakika içinde arayarak teyit eder.",
+      "summaryTitle": "Sepetiniz",
+      "summaryEmpty": "Sepetiniz boş. Önce menüden ürün ekleyin.",
+      "backToOrder": "Menüye dön",
+      "form": {
+        "name": "Adınız",
+        "phone": "Telefon",
+        "email": "E-posta (opsiyonel)",
+        "address": "Adres",
+        "addressPlaceholder": "Mahalle, sokak, bina no, daire",
+        "addressNote": "Adres tarifi (opsiyonel)",
+        "addressNotePlaceholder": "Kapı zili, kat, dış görüntü…",
+        "note": "Sipariş notu (opsiyonel)",
+        "notePlaceholder": "Alerji, hassasiyet, özel istek…",
+        "paymentTitle": "Ödeme yöntemi",
+        "paymentCash": "Kapıda nakit",
+        "paymentCard": "Kapıda kart",
+        "kvkk": "Bilgilerimin sipariş teyidi için kullanılmasını kabul ediyorum.",
+        "submit": "Siparişi Gönder",
+        "submitting": "Gönderiliyor…",
+        "errorGeneric": "Bir hata oluştu, lütfen tekrar deneyin.",
+        "errorMissing": "Lütfen ad, telefon ve adres alanlarını doldurun.",
+        "errorEmpty": "Sepetiniz boş.",
+        "errorRate": "Çok fazla istek, lütfen bir dakika bekleyin."
+      }
+    },
+    "thanks": {
+      "title": "Siparişiniz alındı",
+      "orderNoLabel": "Sipariş no",
+      "subtitle": "Ekibimiz 5 dakika içinde sizi arayarak teyit edecek.",
+      "back": "Anasayfa",
+      "reorder": "Yeni sipariş"
+    }
   },
   "menuPage": {
     "meta": {

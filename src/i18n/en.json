@@ -8,6 +8,7 @@
     "manifesto": "Manifesto",
     "heritage": "Heritage",
     "menu": "Menu",
+    "order": "Order",
     "chef": "Chef",
     "reservation": "Reservation",
     "contact": "Contact",
@@ -91,6 +92,85 @@
   "footer": {
     "tagline": "My table, my feast.",
     "rights": "All rights reserved."
+  },
+  "orderPage": {
+    "meta": {
+      "title": "Order — Mi Mesa",
+      "description": "Order Mi Mesa delivery. Our team will call to confirm within 5 minutes.",
+      "ogAlt": "Mi Mesa order"
+    },
+    "splash": {
+      "welcome": "Welcome, let us take your order",
+      "tagline": "My table, my feast.",
+      "enterButton": "Browse the menu",
+      "backHome": "Home"
+    },
+    "index": {
+      "eyebrow": "Order",
+      "title": "Let us bring,",
+      "titleEm": "the table to you.",
+      "subtitle": "Add to your basket; we'll call to confirm within 5 minutes.",
+      "itemsLabel": "plates",
+      "categoryMetaTitle": "{name} — Mi Mesa Order",
+      "footnote": "Prices are in Turkish Liras. After we receive your order, our team will call to confirm. Payment is taken at the door — cash or card."
+    },
+    "category": {
+      "backToOrder": "Categories",
+      "backToSplash": "Order",
+      "itemsLabel": "plates",
+      "askChef": "Ask the chef"
+    },
+    "card": {
+      "addToCart": "+ Add to basket",
+      "added": "Added"
+    },
+    "cart": {
+      "title": "Your basket",
+      "empty": "Your basket is empty.",
+      "browseMenu": "Back to menu",
+      "qty": "Quantity",
+      "remove": "Remove",
+      "subtotal": "Subtotal",
+      "total": "Total",
+      "checkout": "Complete order",
+      "fabAria": "Open basket",
+      "close": "Close"
+    },
+    "checkout": {
+      "title": "Complete your order",
+      "subtitle": "We'll call your number within 5 minutes to confirm.",
+      "summaryTitle": "Your basket",
+      "summaryEmpty": "Your basket is empty. Pick something from the menu first.",
+      "backToOrder": "Back to menu",
+      "form": {
+        "name": "Your name",
+        "phone": "Phone",
+        "email": "Email (optional)",
+        "address": "Address",
+        "addressPlaceholder": "Neighbourhood, street, building no., flat",
+        "addressNote": "Directions (optional)",
+        "addressNotePlaceholder": "Doorbell, floor, landmark…",
+        "note": "Order note (optional)",
+        "notePlaceholder": "Allergies, sensitivities, special requests…",
+        "paymentTitle": "Payment method",
+        "paymentCash": "Cash at door",
+        "paymentCard": "Card at door",
+        "kvkk": "I agree my contact details will be used to confirm this order.",
+        "submit": "Place order",
+        "submitting": "Sending…",
+        "errorGeneric": "Something went wrong — please try again.",
+        "errorMissing": "Please fill in name, phone and address.",
+        "errorEmpty": "Your basket is empty.",
+        "errorRate": "Too many requests, please wait a minute."
+      }
+    },
+    "thanks": {
+      "title": "Order received",
+      "orderNoLabel": "Order no.",
+      "subtitle": "Our team will call to confirm within 5 minutes.",
+      "back": "Home",
+      "reorder": "New order"
+    }
   },
   "menuPage": {
     "meta": {

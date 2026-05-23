@@ -1,0 +1,66 @@
+---
+// Clone of CategoryCard with one change: the href points at the order route,
+// not the menu. Visual treatment is identical.
+import { Image } from 'astro:assets';
+import { type Locale, localizedPath } from '@/lib/i18n';
+import { type MenuCategory, localized } from '@/lib/menu';
+
+interface Props {
+  lang: Locale;
+  category: MenuCategory;
+  index: number;
+  total: number;
+  itemCount: number;
+  itemsLabel: string;
+}
+
+const { lang, category, index, total, itemCount, itemsLabel } = Astro.props;
+
+const href = localizedPath(lang, `/siparis-ver/${category.slug}`);
+const numeral = String(index).padStart(2, '0');
+const totalStr = String(total).padStart(2, '0');
+const name = localized(category.name, lang);
+const tagline = localized(category.tagline, lang);
+---
+
+<a href={href} class="group block relative overflow-hidden">
+  <article class="relative w-full overflow-hidden bg-[var(--color-charcoal)]" style="aspect-ratio:4/5;">
+    <Image
+      src={category.cover}
+      alt={name}
+      width={900}
+      height={1125}
+      loading="lazy"
+      decoding="async"
+      class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+    />
+
+    <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none"></div>
+
+    <span class="absolute top-3 start-3 w-5 h-5 border-t border-s border-[var(--color-copper)]/55 transition-all duration-500 group-hover:w-7 group-hover:h-7" aria-hidden="true"></span>
+    <span class="absolute bottom-3 end-3 w-5 h-5 border-b border-e border-[var(--color-copper)]/55 transition-all duration-500 group-hover:w-7 group-hover:h-7" aria-hidden="true"></span>
+
+    <span
+      class="absolute top-4 end-4 text-[var(--color-champagne)]/75 text-[0.65rem]"
+      style="letter-spacing:var(--tracking-wider-luxe);font-family:var(--font-body);"
+    >
+      {numeral}<span class="text-[var(--color-champagne)]/40"> / {totalStr}</span>
+    </span>
+
+    <div class="absolute inset-x-0 bottom-0 p-5 md:p-7">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="block w-6 h-px bg-[var(--color-copper-soft)] transition-all duration-500 group-hover:w-12"></span>
+        <span class="text-[0.62rem] text-[var(--color-champagne)]/65" style="letter-spacing:var(--tracking-wider-luxe);text-transform:uppercase;">
+          {itemCount} · {itemsLabel}
+        </span>
+      </div>
+      <h3
+        class="text-[var(--color-champagne)]"
+        style="font-family:var(--font-display);font-size:clamp(1.4rem, 2.6vw, 2rem);line-height:1.1;font-weight:400;"
+      >
+        <span class="block">{name}</span>
+        <span class="block italic mt-0.5 text-[var(--color-copper-soft)] text-[0.62em]">{tagline}</span>
+      </h3>
+    </div>
+  </article>
+</a>

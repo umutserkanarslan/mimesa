@@ -1,0 +1,219 @@
+---
+// Slide-in cart drawer. Listens for the 'mimesa:cart:open' custom event
+// dispatched by CartFab. Renders cart lines via vanilla DOM updates so we
+// don't have to ship a framework.
+import { type Locale, getDict, localizedPath } from '@/lib/i18n';
+
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = getDict(lang).orderPage.cart;
+const checkoutHref = localizedPath(lang, '/siparis-ver/odeme');
+const browseHref = localizedPath(lang, '/siparis-ver/kategoriler');
+const isAr = lang === 'ar';
+---
+
+<div
+  data-cart-drawer
+  data-lang={lang}
+  hidden
+  class="fixed inset-0 z-50"
+  aria-modal="true"
+  role="dialog"
+  aria-label={t.title}
+>
+  <!-- Backdrop -->
+  <div data-cart-backdrop class="absolute inset-0 bg-[var(--color-charcoal)]/55 opacity-0 transition-opacity duration-300"></div>
+
+  <!-- Panel -->
+  <aside
+    data-cart-panel
+    class:list={[
+      'absolute top-0 bottom-0 w-full max-w-md bg-[var(--color-offwhite)] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.55)] flex flex-col transform transition-transform duration-300',
+      isAr ? 'start-0 -translate-x-full' : 'end-0 translate-x-full'
+    ]}
+  >
+    <!-- Header -->
+    <header class="flex items-center justify-between px-5 md:px-7 h-[64px] border-b border-[var(--color-copper)]/20">
+      <h2 style="font-family:var(--font-display);font-style:italic;font-weight:500;font-size:1.25rem;color:var(--color-ink);">
+        {t.title}
+      </h2>
+      <button
+        type="button"
+        data-cart-close
+        aria-label={t.close}
+        class="p-2 -me-2 text-[var(--color-ink)]/70 hover:text-[var(--color-copper)] transition-colors"
+      >
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+          <path d="M6 6l12 12M18 6l-12 12" />
+        </svg>
+      </button>
+    </header>
+
+    <!-- Empty state -->
+    <div data-cart-empty class="flex-1 flex flex-col items-center justify-center px-7 text-center gap-5" hidden>
+      <p class="text-[var(--color-ink)]/65 italic" style="font-family:var(--font-display);font-size:1.1rem;">
+        {t.empty}
+      </p>
+      <a href={browseHref} class="btn-copper">
+        {t.browseMenu}
+      </a>
+    </div>
+
+    <!-- Lines -->
+    <div data-cart-lines class="flex-1 overflow-y-auto px-5 md:px-7 py-4"></div>
+
+    <!-- Footer (total + checkout) -->
+    <footer data-cart-footer class="px-5 md:px-7 pt-4 pb-6 border-t border-[var(--color-copper)]/20 bg-[var(--color-offwhite)]" hidden>
+      <div class="flex items-baseline justify-between mb-4">
+        <span class="text-[0.78rem] uppercase text-[var(--color-ink)]/60" style="letter-spacing:var(--tracking-wide-luxe);">
+          {t.total}
+        </span>
+        <span data-cart-total style="font-family:var(--font-display);font-size:1.5rem;font-weight:500;color:var(--color-copper);">0 ₺</span>
+      </div>
+      <a href={checkoutHref} class="btn-copper w-full justify-center">
+        {t.checkout}
+      </a>
+    </footer>
+  </aside>
+</div>
+
+<script>
+  import { readCart, setQty, removeLine, cartTotal, onCartChange } from '@/lib/cart';
+
+  type Lang = 'tr' | 'en' | 'ar';
+
+  const STRINGS = {
+    tr: { qty: 'Adet', remove: 'Kaldır' },
+    en: { qty: 'Quantity', remove: 'Remove' },
+    ar: { qty: 'الكمية', remove: 'إزالة' }
+  } as const;
+
+  function formatPrice(n: number, lang: Lang): string {
+    const f = new Intl.NumberFormat(
+      lang === 'tr' ? 'tr-TR' : lang === 'ar' ? 'ar' : 'en-US',
+      { maximumFractionDigits: 0 }
+    );
+    return lang === 'ar' ? `${f.format(n)} ل.ت` : `${f.format(n)} ₺`;
+  }
+
+  const wire = () => {
+    const drawer = document.querySelector<HTMLElement>('[data-cart-drawer]');
+    if (!drawer) return;
+    const lang = (drawer.dataset.lang ?? 'tr') as Lang;
+    const s = STRINGS[lang];
+
+    const backdrop = drawer.querySelector<HTMLElement>('[data-cart-backdrop]')!;
+    const panel = drawer.querySelector<HTMLElement>('[data-cart-panel]')!;
+    const empty = drawer.querySelector<HTMLElement>('[data-cart-empty]')!;
+    const lines = drawer.querySelector<HTMLElement>('[data-cart-lines]')!;
+    const footer = drawer.querySelector<HTMLElement>('[data-cart-footer]')!;
+    const totalEl = drawer.querySelector<HTMLElement>('[data-cart-total]')!;
+    const closeBtn = drawer.querySelector<HTMLButtonElement>('[data-cart-close]')!;
+
+    const open = () => {
+      drawer.hidden = false;
+      requestAnimationFrame(() => {
+        backdrop.style.opacity = '1';
+        panel.style.transform = 'translateX(0)';
+      });
+      document.body.style.overflow = 'hidden';
+    };
+    const hide = () => {
+      backdrop.style.opacity = '0';
+      panel.style.transform = lang === 'ar' ? 'translateX(-100%)' : 'translateX(100%)';
+      setTimeout(() => { drawer.hidden = true; }, 280);
+      document.body.style.overflow = '';
+    };
+
+    const render = () => {
+      const cart = readCart();
+      if (cart.length === 0) {
+        empty.hidden = false;
+        lines.hidden = true;
+        footer.hidden = true;
+        return;
+      }
+      empty.hidden = true;
+      lines.hidden = false;
+      footer.hidden = false;
+
+      lines.innerHTML = '';
+      for (const line of cart) {
+        const row = document.createElement('article');
+        row.className = 'flex gap-3 py-4 border-b border-[var(--color-copper)]/15 last:border-0';
+
+        const img = document.createElement('img');
+        img.src = line.image;
+        img.alt = line.name;
+        img.loading = 'lazy';
+        img.className = 'w-16 h-16 md:w-20 md:h-20 object-cover flex-shrink-0 bg-[var(--color-champagne-soft)]';
+
+        const body = document.createElement('div');
+        body.className = 'flex-1 min-w-0 flex flex-col';
+
+        const name = document.createElement('h3');
+        name.className = 'text-[0.95rem] leading-tight';
+        name.style.fontFamily = 'var(--font-display)';
+        name.style.color = 'var(--color-ink)';
+        name.textContent = line.priceLabel ? `${line.name} (${line.priceLabel})` : line.name;
+
+        const meta = document.createElement('div');
+        meta.className = 'mt-1 text-[0.8rem] text-[var(--color-ink)]/65 italic';
+        meta.style.fontFamily = 'var(--font-display)';
+        meta.textContent = `${line.qty} × ${formatPrice(line.price, lang)} = ${formatPrice(line.qty * line.price, lang)}`;
+
+        const controls = document.createElement('div');
+        controls.className = 'mt-2 flex items-center gap-3';
+
+        const stepper = document.createElement('div');
+        stepper.className = 'inline-flex items-center border border-[var(--color-copper)]/40';
+
+        const minus = document.createElement('button');
+        minus.type = 'button';
+        minus.className = 'w-8 h-8 inline-flex items-center justify-center text-[var(--color-ink)] hover:bg-[var(--color-copper)]/10';
+        minus.setAttribute('aria-label', `−`);
+        minus.textContent = '−';
+        minus.addEventListener('click', () => setQty(line.itemId, line.priceLabel, line.qty - 1));
+
+        const qty = document.createElement('span');
+        qty.className = 'w-8 text-center text-[0.9rem]';
+        qty.setAttribute('aria-label', s.qty);
+        qty.textContent = String(line.qty);
+
+        const plus = document.createElement('button');
+        plus.type = 'button';
+        plus.className = 'w-8 h-8 inline-flex items-center justify-center text-[var(--color-ink)] hover:bg-[var(--color-copper)]/10';
+        plus.setAttribute('aria-label', `+`);
+        plus.textContent = '+';
+        plus.addEventListener('click', () => setQty(line.itemId, line.priceLabel, line.qty + 1));
+
+        stepper.append(minus, qty, plus);
+
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'text-[0.72rem] uppercase text-[var(--color-ink)]/55 hover:text-[var(--color-copper)] transition-colors';
+        remove.style.letterSpacing = 'var(--tracking-wide-luxe)';
+        remove.textContent = s.remove;
+        remove.addEventListener('click', () => removeLine(line.itemId, line.priceLabel));
+
+        controls.append(stepper, remove);
+        body.append(name, meta, controls);
+        row.append(img, body);
+        lines.appendChild(row);
+      }
+
+      totalEl.textContent = formatPrice(cartTotal(), lang);
+    };
+
+    document.addEventListener('mimesa:cart:open', open);
+    backdrop.addEventListener('click', hide);
+    closeBtn.addEventListener('click', hide);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !drawer.hidden) hide();
+    });
+    onCartChange(render);
+    render();
+  };
+
+  document.addEventListener('astro:page-load', wire);
+</script>

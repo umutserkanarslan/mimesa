@@ -1,0 +1,122 @@
+{
+	"version": 3,
+	"routes": [
+		{
+			"handle": "filesystem"
+		},
+		{
+			"src": "^/_astro/(.*)$",
+			"headers": {
+				"cache-control": "public, max-age=31536000, immutable"
+			},
+			"continue": true
+		},
+		{
+			"src": "^/_server-islands/([^/]+?)/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/_image/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/api/order/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/ar/menu/kategoriler/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/ar/menu/([^/]+?)/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/ar/siparis-ver/kategoriler/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/ar/siparis-ver/odeme/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/ar/siparis-ver/tesekkurler/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/ar/siparis-ver/([^/]+?)/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/en/menu/kategoriler/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/en/menu/([^/]+?)/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/en/siparis-ver/kategoriler/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/en/siparis-ver/odeme/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/en/siparis-ver/tesekkurler/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/en/siparis-ver/([^/]+?)/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/menu/kategoriler/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/menu/([^/]+?)/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/siparis-ver/kategoriler/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/siparis-ver/odeme/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/siparis-ver/tesekkurler/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/siparis-ver/([^/]+?)/?$",
+			"dest": "_render"
+		}
+	],
+	"images": {
+		"sizes": [
+			640,
+			750,
+			828,
+			1080,
+			1200,
+			1920,
+			2048,
+			3840
+		],
+		"domains": [],
+		"remotePatterns": [
+			{
+				"protocol": "https",
+				"hostname": "images.unsplash.com"
+			},
+			{
+				"protocol": "https",
+				"hostname": "**.supabase.co"
+			}
+		]
+	}
+}

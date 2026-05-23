@@ -160,6 +160,35 @@
     background: var(--color-champagne);
     color: var(--color-charcoal);
   }
+
+  /* Add-to-cart button on order item cards. Smaller, denser than btn-copper. */
+  .add-cart-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.95rem;
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 0.74rem;
+    letter-spacing: var(--tracking-wide-luxe);
+    text-transform: uppercase;
+    color: var(--color-copper);
+    border: 1px solid color-mix(in srgb, var(--color-copper) 55%, transparent);
+    background: transparent;
+    cursor: pointer;
+    transition: color .3s ease, background .3s ease, border-color .3s ease, transform .15s ease;
+  }
+  .add-cart-btn:hover {
+    background: var(--color-copper);
+    color: var(--color-offwhite);
+    border-color: var(--color-copper);
+  }
+  .add-cart-btn--pulse {
+    transform: scale(0.96);
+    background: var(--color-copper);
+    color: var(--color-offwhite);
+    border-color: var(--color-copper);
+  }
 }
 
 /* ---- Reveal animations ---- */

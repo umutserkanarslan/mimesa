@@ -1,0 +1,229 @@
+---
+// The checkout form. Heavily borrows the styling pattern of ReservationForm
+// (form-line inputs, copper accents) but submits to POST /api/order via
+// fetch — no Netlify Forms, no full-page reload.
+import { type Locale, getDict, localizedPath } from '@/lib/i18n';
+
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const f = getDict(lang).orderPage.checkout.form;
+const t = getDict(lang).orderPage.checkout;
+const cart = getDict(lang).orderPage.cart;
+const thanksHref = localizedPath(lang, '/siparis-ver/tesekkurler');
+const browseHref = localizedPath(lang, '/siparis-ver/kategoriler');
+---
+
+<form
+  data-order-form
+  data-lang={lang}
+  data-thanks={thanksHref}
+  class="grid grid-cols-2 gap-x-6 gap-y-6"
+>
+  <p class="hidden" aria-hidden="true">
+    <label>Don't fill: <input name="honeypot" tabindex="-1" autocomplete="off" /></label>
+  </p>
+
+  <label class="col-span-2 sm:col-span-1 flex flex-col gap-2">
+    <span class="text-[0.72rem] uppercase text-[var(--color-ink)]/60" style="letter-spacing:var(--tracking-wider-luxe);">{f.name}</span>
+    <input type="text" name="name" required maxlength="80" class="form-line" autocomplete="name" />
+  </label>
+
+  <label class="col-span-2 sm:col-span-1 flex flex-col gap-2">
+    <span class="text-[0.72rem] uppercase text-[var(--color-ink)]/60" style="letter-spacing:var(--tracking-wider-luxe);">{f.phone}</span>
+    <input type="tel" name="phone" required maxlength="30" class="form-line" autocomplete="tel" />
+  </label>
+
+  <label class="col-span-2 flex flex-col gap-2">
+    <span class="text-[0.72rem] uppercase text-[var(--color-ink)]/60" style="letter-spacing:var(--tracking-wider-luxe);">{f.email}</span>
+    <input type="email" name="email" maxlength="120" class="form-line" autocomplete="email" />
+  </label>
+
+  <label class="col-span-2 flex flex-col gap-2">
+    <span class="text-[0.72rem] uppercase text-[var(--color-ink)]/60" style="letter-spacing:var(--tracking-wider-luxe);">{f.address}</span>
+    <textarea name="address" required maxlength="400" rows="2" class="form-line resize-none" placeholder={f.addressPlaceholder}></textarea>
+  </label>
+
+  <label class="col-span-2 flex flex-col gap-2">
+    <span class="text-[0.72rem] uppercase text-[var(--color-ink)]/60" style="letter-spacing:var(--tracking-wider-luxe);">{f.addressNote}</span>
+    <input type="text" name="addressNote" maxlength="200" class="form-line" placeholder={f.addressNotePlaceholder} />
+  </label>
+
+  <label class="col-span-2 flex flex-col gap-2">
+    <span class="text-[0.72rem] uppercase text-[var(--color-ink)]/60" style="letter-spacing:var(--tracking-wider-luxe);">{f.note}</span>
+    <textarea name="note" rows="2" maxlength="400" class="form-line resize-none" placeholder={f.notePlaceholder}></textarea>
+  </label>
+
+  <fieldset class="col-span-2 flex flex-col gap-3">
+    <legend class="text-[0.72rem] uppercase text-[var(--color-ink)]/60 mb-1" style="letter-spacing:var(--tracking-wider-luxe);">{f.paymentTitle}</legend>
+    <label class="inline-flex items-center gap-3 cursor-pointer">
+      <input type="radio" name="paymentMethod" value="cash" checked class="payment-radio" />
+      <span>{f.paymentCash}</span>
+    </label>
+    <label class="inline-flex items-center gap-3 cursor-pointer">
+      <input type="radio" name="paymentMethod" value="card" class="payment-radio" />
+      <span>{f.paymentCard}</span>
+    </label>
+  </fieldset>
+
+  <label class="col-span-2 inline-flex items-start gap-3 text-[0.85rem] text-[var(--color-ink)]/75 cursor-pointer">
+    <input type="checkbox" name="kvkk" required class="mt-1 accent-[var(--color-copper)]" />
+    <span>{f.kvkk}</span>
+  </label>
+
+  <div class="col-span-2 mt-2 flex flex-col gap-3">
+    <p data-form-error class="text-[0.85rem] text-red-700/85" hidden></p>
+    <button type="submit" data-form-submit class="btn-copper justify-center">
+      <span data-form-submit-label>{f.submit}</span>
+    </button>
+  </div>
+
+  <p class="col-span-2 text-[0.78rem] text-[var(--color-ink)]/55 leading-relaxed">
+    <a href={browseHref} class="hover:text-[var(--color-copper)] underline decoration-dotted">{t.backToOrder}</a>
+  </p>
+</form>
+
+<style>
+  .form-line {
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-ink) 30%, transparent);
+    padding: 0.65rem 0;
+    font-family: var(--font-body);
+    font-size: 0.98rem;
+    color: var(--color-ink);
+    transition: border-color .4s ease;
+  }
+  html[lang="ar"] .form-line { font-family: var(--font-arabic-body); }
+  .form-line:focus {
+    outline: none;
+    border-bottom-color: var(--color-copper);
+  }
+  .form-line::placeholder { color: color-mix(in srgb, var(--color-ink) 35%, transparent); }
+  textarea.form-line { line-height: 1.6; }
+  .payment-radio {
+    accent-color: var(--color-copper);
+    width: 1rem;
+    height: 1rem;
+  }
+</style>
+
+<script>
+  import { readCart, clearCart } from '@/lib/cart';
+
+  type Lang = 'tr' | 'en' | 'ar';
+
+  const STRINGS = {
+    tr: {
+      submit: 'Siparişi Gönder',
+      submitting: 'Gönderiliyor…',
+      errorGeneric: 'Bir hata oluştu, lütfen tekrar deneyin.',
+      errorMissing: 'Lütfen ad, telefon ve adres alanlarını doldurun.',
+      errorEmpty: 'Sepetiniz boş.',
+      errorRate: 'Çok fazla istek, lütfen bir dakika bekleyin.'
+    },
+    en: {
+      submit: 'Place order',
+      submitting: 'Sending…',
+      errorGeneric: 'Something went wrong — please try again.',
+      errorMissing: 'Please fill in name, phone and address.',
+      errorEmpty: 'Your basket is empty.',
+      errorRate: 'Too many requests, please wait a minute.'
+    },
+    ar: {
+      submit: 'إرسال الطلب',
+      submitting: 'جارٍ الإرسال…',
+      errorGeneric: 'حدث خطأ، حاول مرة أخرى.',
+      errorMissing: 'يرجى تعبئة الاسم والهاتف والعنوان.',
+      errorEmpty: 'سلّتك فارغة.',
+      errorRate: 'طلبات كثيرة، يرجى الانتظار دقيقة.'
+    }
+  } as const;
+
+  const wire = () => {
+    const form = document.querySelector<HTMLFormElement>('[data-order-form]');
+    if (!form) return;
+    const lang = (form.dataset.lang ?? 'tr') as Lang;
+    const s = STRINGS[lang];
+    const thanksHref = form.dataset.thanks ?? '/siparis-ver/tesekkurler';
+    const submitBtn = form.querySelector<HTMLButtonElement>('[data-form-submit]')!;
+    const submitLabel = form.querySelector<HTMLSpanElement>('[data-form-submit-label]')!;
+    const errEl = form.querySelector<HTMLParagraphElement>('[data-form-error]')!;
+
+    const showError = (msg: string) => {
+      errEl.textContent = msg;
+      errEl.hidden = false;
+    };
+    const clearError = () => { errEl.hidden = true; errEl.textContent = ''; };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearError();
+
+      const cart = readCart();
+      if (cart.length === 0) {
+        showError(s.errorEmpty);
+        return;
+      }
+      const fd = new FormData(form);
+      const honeypot = String(fd.get('honeypot') ?? '');
+      const name = String(fd.get('name') ?? '').trim();
+      const phone = String(fd.get('phone') ?? '').trim();
+      const address = String(fd.get('address') ?? '').trim();
+      if (!name || !phone || !address) {
+        showError(s.errorMissing);
+        return;
+      }
+      const payload = {
+        honeypot,
+        lang,
+        customer: {
+          name,
+          phone,
+          email: String(fd.get('email') ?? '').trim() || undefined
+        },
+        address,
+        addressNote: String(fd.get('addressNote') ?? '').trim() || undefined,
+        note: String(fd.get('note') ?? '').trim() || undefined,
+        paymentMethod: (String(fd.get('paymentMethod') ?? 'cash') as 'cash' | 'card'),
+        lines: cart.map((l) => ({
+          itemId: l.itemId,
+          priceLabel: l.priceLabel,
+          qty: l.qty
+        }))
+      };
+
+      submitBtn.disabled = true;
+      submitLabel.textContent = s.submitting;
+      try {
+        const res = await fetch('/api/order', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = (await res.json().catch(() => null)) as { ok?: boolean; orderNo?: number; error?: string } | null;
+        if (res.status === 429) {
+          showError(s.errorRate);
+          submitBtn.disabled = false;
+          submitLabel.textContent = s.submit;
+          return;
+        }
+        if (!res.ok || !data?.ok || !data.orderNo) {
+          showError(s.errorGeneric);
+          submitBtn.disabled = false;
+          submitLabel.textContent = s.submit;
+          return;
+        }
+        clearCart();
+        const url = new URL(thanksHref, window.location.href);
+        url.searchParams.set('no', String(data.orderNo));
+        window.location.href = url.toString();
+      } catch {
+        showError(s.errorGeneric);
+        submitBtn.disabled = false;
+        submitLabel.textContent = s.submit;
+      }
+    });
+  };
+
+  document.addEventListener('astro:page-load', wire);
+</script>

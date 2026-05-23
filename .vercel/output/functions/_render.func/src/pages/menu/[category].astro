@@ -1,0 +1,8 @@
+---
+import CategoryPage from '@/components/menu/CategoryPage.astro';
+import type { Locale } from '@/lib/i18n';
+
+const lang: Locale = 'tr';
+const { category } = Astro.params;
+---
+<CategoryPage lang={lang} categorySlug={category!} />
