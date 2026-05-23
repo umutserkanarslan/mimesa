@@ -1,8 +1,8 @@
 ---
 // Floating cart button (bottom-right). Wires three things:
-//   1. Click delegation for [data-add-cart] buttons across the page
-//   2. Live badge count synced to cart changes
-//   3. Open/close of the drawer (which lives in CartDrawer.astro)
+//   1. Click delegation for [data-add-cart] buttons (one-time, document level)
+//   2. Live badge count synced to cart changes (per page-load, with cleanup)
+//   3. Fab click → dispatches 'mimesa:cart:open' so the drawer opens
 //
 // Mounted globally on order pages (BaseLayout decides by URL path).
 import { type Locale, getDict } from '@/lib/i18n';
@@ -33,26 +33,20 @@ const t = getDict(lang).orderPage.cart;
 <script>
   import { addLine, cartCount, onCartChange } from '@/lib/cart';
 
-  const wire = () => {
-    const fab = document.querySelector<HTMLButtonElement>('[data-cart-fab]');
-    const badge = document.querySelector<HTMLSpanElement>('[data-cart-badge]');
-    if (!fab || !badge) return;
+  // ---------- module-level state -------------------------------------------
+  // Astro's ClientRouter fires `astro:page-load` on every navigation. Without
+  // cleanup, any document-level listener we add would stack up across navs and
+  // each click would fire N times (one Add-to-Cart click → cart += N). The
+  // module is loaded once for the whole session, so we use module-scoped
+  // state to install document handlers exactly once and to swap per-page
+  // subscriptions cleanly.
 
-    const refresh = () => {
-      const n = cartCount();
-      badge.textContent = String(n);
-      fab.hidden = n === 0;
-    };
-    refresh();
-    onCartChange(refresh);
+  let docClickAttached = false;
+  let unsubCart: (() => void) | null = null;
 
-    // Open the drawer (the drawer registers its own open handler too).
-    fab.addEventListener('click', () => {
-      document.dispatchEvent(new CustomEvent('mimesa:cart:open'));
-    });
-
-    // Delegated Add-to-Cart clicks. Buttons opt-in via [data-add-cart] +
-    // data-item-id, data-slug, data-name, data-image, data-price, data-price-label.
+  const attachDocClickOnce = () => {
+    if (docClickAttached) return;
+    docClickAttached = true;
     document.addEventListener('click', (e) => {
       const t = e.target as HTMLElement | null;
       if (!t) return;
@@ -67,10 +61,33 @@ const t = getDict(lang).orderPage.cart;
       const priceLabel = btn.dataset.priceLabel ?? null;
       if (!itemId || !slug || !name || !image || !Number.isFinite(price) || price <= 0) return;
       addLine({ itemId, slug, name, image, price, priceLabel }, 1);
-
-      // Brief flash on the button so the click feels acknowledged.
       btn.classList.add('add-cart-btn--pulse');
       setTimeout(() => btn.classList.remove('add-cart-btn--pulse'), 360);
+    });
+  };
+
+  const wire = () => {
+    attachDocClickOnce();
+
+    const fab = document.querySelector<HTMLButtonElement>('[data-cart-fab]');
+    const badge = document.querySelector<HTMLSpanElement>('[data-cart-badge]');
+    if (!fab || !badge) return;
+
+    const refresh = () => {
+      const n = cartCount();
+      badge.textContent = String(n);
+      fab.hidden = n === 0;
+    };
+    refresh();
+
+    // Replace any previous subscription from the prior page-load.
+    if (unsubCart) unsubCart();
+    unsubCart = onCartChange(refresh);
+
+    // The fab element itself is fresh on every navigation (BaseLayout
+    // re-renders it), so this click listener doesn't accumulate.
+    fab.addEventListener('click', () => {
+      document.dispatchEvent(new CustomEvent('mimesa:cart:open'));
     });
   };
 

@@ -101,12 +101,13 @@ export function cartTotal(): number {
 export function onCartChange(cb: () => void): () => void {
 	if (!isBrowser()) return () => {};
 	const handler = () => cb();
-	window.addEventListener(CHANGE_EVENT, handler);
-	// Cross-tab updates via the storage event.
-	window.addEventListener('storage', (e) => {
+	const storageHandler = (e: StorageEvent) => {
 		if (e.key === KEY) handler();
-	});
+	};
+	window.addEventListener(CHANGE_EVENT, handler);
+	window.addEventListener('storage', storageHandler);
 	return () => {
 		window.removeEventListener(CHANGE_EVENT, handler);
+		window.removeEventListener('storage', storageHandler);
 	};
 }

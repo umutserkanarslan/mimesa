@@ -1,7 +1,6 @@
 ---
-// Slide-in cart drawer. Listens for the 'mimesa:cart:open' custom event
-// dispatched by CartFab. Renders cart lines via vanilla DOM updates so we
-// don't have to ship a framework.
+// Slide-in cart drawer. Listens for 'mimesa:cart:open' dispatched by CartFab.
+// Renders cart lines via vanilla DOM updates — no framework runtime ships.
 import { type Locale, getDict, localizedPath } from '@/lib/i18n';
 
 interface Props { lang: Locale }
@@ -21,18 +20,15 @@ const isAr = lang === 'ar';
   role="dialog"
   aria-label={t.title}
 >
-  <!-- Backdrop -->
   <div data-cart-backdrop class="absolute inset-0 bg-[var(--color-charcoal)]/55 opacity-0 transition-opacity duration-300"></div>
 
-  <!-- Panel -->
   <aside
     data-cart-panel
     class:list={[
-      'absolute top-0 bottom-0 w-full max-w-md bg-[var(--color-offwhite)] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.55)] flex flex-col transform transition-transform duration-300',
+      'absolute top-0 bottom-0 w-full max-w-md bg-[var(--color-offwhite)] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.55)] flex flex-col transition-transform duration-300',
       isAr ? 'start-0 -translate-x-full' : 'end-0 translate-x-full'
     ]}
   >
-    <!-- Header -->
     <header class="flex items-center justify-between px-5 md:px-7 h-[64px] border-b border-[var(--color-copper)]/20">
       <h2 style="font-family:var(--font-display);font-style:italic;font-weight:500;font-size:1.25rem;color:var(--color-ink);">
         {t.title}
@@ -49,7 +45,6 @@ const isAr = lang === 'ar';
       </button>
     </header>
 
-    <!-- Empty state -->
     <div data-cart-empty class="flex-1 flex flex-col items-center justify-center px-7 text-center gap-5" hidden>
       <p class="text-[var(--color-ink)]/65 italic" style="font-family:var(--font-display);font-size:1.1rem;">
         {t.empty}
@@ -59,10 +54,8 @@ const isAr = lang === 'ar';
       </a>
     </div>
 
-    <!-- Lines -->
     <div data-cart-lines class="flex-1 overflow-y-auto px-5 md:px-7 py-4"></div>
 
-    <!-- Footer (total + checkout) -->
     <footer data-cart-footer class="px-5 md:px-7 pt-4 pb-6 border-t border-[var(--color-copper)]/20 bg-[var(--color-offwhite)]" hidden>
       <div class="flex items-baseline justify-between mb-4">
         <span class="text-[0.78rem] uppercase text-[var(--color-ink)]/60" style="letter-spacing:var(--tracking-wide-luxe);">
@@ -96,6 +89,15 @@ const isAr = lang === 'ar';
     return lang === 'ar' ? `${f.format(n)} ل.ت` : `${f.format(n)} ₺`;
   }
 
+  // ---------- module-level state -------------------------------------------
+  // Same rationale as CartFab — clean up across view transitions so handlers
+  // don't accumulate and so 'mimesa:cart:open' never targets a stale
+  // (detached) drawer reference.
+
+  let currentOpenHandler: (() => void) | null = null;
+  let currentEscHandler: ((e: KeyboardEvent) => void) | null = null;
+  let unsubCart: (() => void) | null = null;
+
   const wire = () => {
     const drawer = document.querySelector<HTMLElement>('[data-cart-drawer]');
     if (!drawer) return;
@@ -112,16 +114,20 @@ const isAr = lang === 'ar';
 
     const open = () => {
       drawer.hidden = false;
+      // Two frames give the browser a tick to apply the initial off-screen
+      // transform from the class before we transition to translateX(0).
       requestAnimationFrame(() => {
-        backdrop.style.opacity = '1';
-        panel.style.transform = 'translateX(0)';
+        requestAnimationFrame(() => {
+          backdrop.style.opacity = '1';
+          panel.style.transform = 'translateX(0)';
+        });
       });
       document.body.style.overflow = 'hidden';
     };
     const hide = () => {
       backdrop.style.opacity = '0';
       panel.style.transform = lang === 'ar' ? 'translateX(-100%)' : 'translateX(100%)';
-      setTimeout(() => { drawer.hidden = true; }, 280);
+      window.setTimeout(() => { drawer.hidden = true; }, 280);
       document.body.style.overflow = '';
     };
 
@@ -205,13 +211,25 @@ const isAr = lang === 'ar';
       totalEl.textContent = formatPrice(cartTotal(), lang);
     };
 
-    document.addEventListener('mimesa:cart:open', open);
+    // Swap out the previous global handlers so we never have two drawers
+    // listening at once — the old one targets a detached DOM node.
+    if (currentOpenHandler) document.removeEventListener('mimesa:cart:open', currentOpenHandler);
+    if (currentEscHandler) document.removeEventListener('keydown', currentEscHandler);
+
+    currentOpenHandler = open;
+    currentEscHandler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !drawer.hidden) hide();
+    };
+    document.addEventListener('mimesa:cart:open', currentOpenHandler);
+    document.addEventListener('keydown', currentEscHandler);
+
+    // backdrop and closeBtn live inside this drawer instance — fresh DOM,
+    // listeners don't leak.
     backdrop.addEventListener('click', hide);
     closeBtn.addEventListener('click', hide);
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && !drawer.hidden) hide();
-    });
-    onCartChange(render);
+
+    if (unsubCart) unsubCart();
+    unsubCart = onCartChange(render);
     render();
   };
 
