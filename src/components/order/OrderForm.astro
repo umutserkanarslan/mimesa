@@ -34,11 +34,6 @@ const browseHref = localizedPath(lang, '/siparis-ver/kategoriler');
   </label>
 
   <label class="col-span-2 flex flex-col gap-2">
-    <span class="text-[0.72rem] uppercase text-[var(--color-ink)]/60" style="letter-spacing:var(--tracking-wider-luxe);">{f.email}</span>
-    <input type="email" name="email" maxlength="120" class="form-line" autocomplete="email" />
-  </label>
-
-  <label class="col-span-2 flex flex-col gap-2">
     <span class="text-[0.72rem] uppercase text-[var(--color-ink)]/60" style="letter-spacing:var(--tracking-wider-luxe);">{f.address}</span>
     <textarea name="address" required maxlength="400" rows="2" class="form-line resize-none" placeholder={f.addressPlaceholder}></textarea>
   </label>
@@ -176,11 +171,7 @@ const browseHref = localizedPath(lang, '/siparis-ver/kategoriler');
       const payload = {
         honeypot,
         lang,
-        customer: {
-          name,
-          phone,
-          email: String(fd.get('email') ?? '').trim() || undefined
-        },
+        customer: { name, phone },
         address,
         addressNote: String(fd.get('addressNote') ?? '').trim() || undefined,
         note: String(fd.get('note') ?? '').trim() || undefined,
